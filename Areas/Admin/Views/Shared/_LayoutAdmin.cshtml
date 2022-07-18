@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Twitter -->
+    <meta name="twitter:site" content="@@themepixels">
+    <meta name="twitter:creator" content="@@themepixels">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Slim">
+    <meta name="twitter:description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="twitter:image" content="http://themepixels.me/slim/img/slim-social.png">
+
+    <!-- Facebook -->
+    <meta property="og:url" content="http://themepixels.me/slim">
+    <meta property="og:title" content="Slim">
+    <meta property="og:description" content="Premium Quality and Responsive UI for Dashboard.">
+
+    <meta property="og:image" content="http://themepixels.me/slim/img/slim-social.png">
+    <meta property="og:image:secure_url" content="http://themepixels.me/slim/img/slim-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="600">
+
+    <!-- Meta -->
+    <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="author" content="ThemePixels">
+
+    <title>@ViewData["Title"]-blog web</title>
+
+    <!-- vendor css -->
+    <link href="~/AdminAssets/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/AdminAssets/lib/Ionicons/css/ionicons.css" rel="stylesheet">
+    <link href="~/AdminAssets/lib/chartist/css/chartist.css" rel="stylesheet">
+    <link href="~/AdminAssets/lib/rickshaw/css/rickshaw.min.css" rel="stylesheet">
+    <!-- Slim CSS -->
+    <link rel="stylesheet" href="~/AdminAssets/css/slim.css">
+    <link href="~/AdminAssets/css/slim.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="slim-header">
+        <div class="container">
+            <div class="slim-header-left">
+                <h2 class="slim-logo"><a href="index.html">slim<span>.</span></a></h2>
+
+                <div class="search-box">
+                    <input type="text" class="form-control" placeholder="Search">
+                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </div><!-- search-box -->
+            </div><!-- slim-header-left -->
+            <div class="slim-header-right">
+                <div class="dropdown dropdown-a">
+                    <a href="" class="header-notification" data-toggle="dropdown">
+                        <i class="icon ion-ios-bolt-outline"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-header">
+                            <h6 class="dropdown-menu-title">Activity Logs</h6>
+                            <div>
+                                <a href="">Filter List</a>
+                                <a href="">Settings</a>
+                            </div>
+                        </div><!-- dropdown-menu-header -->
+                        <div class="dropdown-activity-list">
+                            <div class="activity-label">Today, December 13, 2017</div>
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">10:15am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-success"></span></div>
+                                    <div class="col-8">Purchased christmas sale cloud storage</div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">9:48am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-danger"></span></div>
+                                    <div class="col-8">Login failure</div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">7:29am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-warning"></span></div>
+                                    <div class="col-8">(D:) Storage almost full</div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">3:21am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-success"></span></div>
+                                    <div class="col-8">1 item sold <strong>Christmas bundle</strong></div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-label">Yesterday, December 12, 2017</div>
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">6:57am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-success"></span></div>
+                                    <div class="col-8">Earn new badge <strong>Elite Author</strong></div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                        </div><!-- dropdown-activity-list -->
+                        <div class="dropdown-list-footer">
+                            <a href="page-activity.html"><i class="fa fa-angle-down"></i> Show All Activities</a>
+                        </div>
+                    </div><!-- dropdown-menu-right -->
+                </div><!-- dropdown -->
+                <div class="dropdown dropdown-b">
+                    <a href="" class="header-notification" data-toggle="dropdown">
+                        <i class="icon ion-ios-bell-outline"></i>
+                        <span class="indicator"></span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-header">
+                            <h6 class="dropdown-menu-title">Notifications</h6>
+                            <div>
+                                <a href="">Mark All as Read</a>
+                                <a href="">Settings</a>
+                            </div>
+                        </div><!-- dropdown-menu-header -->
+                        <div class="dropdown-list">
+                            <!-- loop starts here -->
+                            <a href="" class="dropdown-link">
+                                <div class="media">
+                                    <img src="http://via.placeholder.com/500x500" alt="">
+                                    <div class="media-body">
+                                        <p><strong>Suzzeth Bungaos</strong> tagged you and 18 others in a post.</p>
+                                        <span>October 03, 2017 8:45am</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <!-- loop ends here -->
+                            <a href="" class="dropdown-link">
+                                <div class="media">
+                                    <img src="http://via.placeholder.com/500x500" alt="">
+                                    <div class="media-body">
+                                        <p><strong>Mellisa Brown</strong> appreciated your work <strong>The Social Network</strong></p>
+                                        <span>October 02, 2017 12:44am</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <a href="" class="dropdown-link read">
+                                <div class="media">
+                                    <img src="http://via.placeholder.com/500x500" alt="">
+                                    <div class="media-body">
+                                        <p>20+ new items added are for sale in your <strong>Sale Group</strong></p>
+                                        <span>October 01, 2017 10:20pm</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <a href="" class="dropdown-link read">
+                                <div class="media">
+                                    <img src="http://via.placeholder.com/500x500" alt="">
+                                    <div class="media-body">
+                                        <p><strong>Julius Erving</strong> wants to connect with you on your conversation with <strong>Ronnie Mara</strong></p>
+                                        <span>October 01, 2017 6:08pm</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <div class="dropdown-list-footer">
+                                <a href="page-notifications.html"><i class="fa fa-angle-down"></i> Show All Notifications</a>
+                            </div>
+                        </div><!-- dropdown-list -->
+                    </div><!-- dropdown-menu-right -->
+                </div><!-- dropdown -->
+                <div class="dropdown dropdown-c">
+                    <a href="#" class="logged-user" data-toggle="dropdown">
+                        <img src="data:image/jpeg;base64,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" alt="">
+                        <span>Bảo</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <nav class="nav">
+                            <a href="page-profile.html" class="nav-link"><i class="icon ion-person"></i> View Profile</a>
+                            <a href="page-edit-profile.html" class="nav-link"><i class="icon ion-compose"></i> Edit Profile</a>
+                            <a href="page-activity.html" class="nav-link"><i class="icon ion-ios-bolt"></i> Activity Log</a>
+                            <a href="page-settings.html" class="nav-link"><i class="icon ion-ios-gear"></i> Account Settings</a>
+                            <a href="page-signin.html" class="nav-link"><i class="icon ion-forward"></i> Sign Out</a>
+                        </nav>
+                    </div><!-- dropdown-menu -->
+                </div><!-- dropdown -->
+            </div><!-- header-right -->
+        </div><!-- container -->
+    </div><!-- slim-header -->
+
+    <div class="slim-navbar">
+        <div class="container">
+            <ul class="nav">
+                <li class="nav-item active">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                        <i class="icon ion-ios-home-outline"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>  <!--Dashboard-->
+
+                <li class="nav-item with-sub">
+                    <a class="nav-link" href="#">
+                        <i class="icon ion-android-document"></i>
+                        <span>Bài Viết</span>
+                    </a>
+                    <div class="sub-item">
+                        <ul>
+                            <li><a asp-area="Admin" asp-controller="Posts" asp-action="Index">QUẢN LÝ BÀI VIẾT </a></li>
+                            <li><a asp-area="Admin" asp-controller="Posts" asp-action="Create"> THÊM MÓI </a></li>
+                        </ul>
+                    </div> <!-- dropdown-menu -->
+                </li><!--Bài viết-->
+                <li class="nav-item with-sub">
+                    <a class="nav-link" href="#">
+                        <i class="icon ion-information-circled"></i>
+                        <span>Hệ Thống</span>
+                    </a>
+                    <div class="sub-item">
+                        <ul>
+                            <li><a asp-area="Admin" asp-controller="Categories" asp-action="Index">QUẢN LÝ DANH MỤC</a></li>
+                            <li><a asp-area="Admin" asp-controller="Accounts" asp-action="Index"> QUẢN LÝ TÀI KHOẢN</a></li>
+                            <li><a asp-area="Admin" asp-controller="Roles" asp-action="Index"> QUYỀN TRUY CẬP</a></li>
+                        </ul>
+                    </div> <!-- dropdown-menu -->
+                </li><!--Hệ thống-->
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Advertisements" asp-action="Index">
+                        <i class="icon ion-android-favorite"></i>
+                        <span>QUẢNG CÁO</span>
+                    </a>
+                </li> <!--Quảng cáo-->
+            </ul>
+        </div><!-- container -->
+    </div><!-- slim-navbar -->
+
+    <div class="slim-mainpanel">
+        <div class="container">
+            @RenderBody()
+
+        </div><!-- container -->
+    </div><!-- slim-mainpanel -->
+
+    <div class="slim-footer">
+        <div class="container">
+            <p>Copyright 2018 &copy; All Rights Reserved. Slim Dashboard Template</p>
+            <p>Designed by: <a href="">ThemePixels</a></p>
+        </div><!-- container -->
+    </div><!-- slim-footer -->
+
+    <script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>
+    <script src="~/AdminAssets/lib/popper.js/js/popper.js"></script>
+    <script src="~/AdminAssets/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/AdminAssets/lib/jquery.cookie/js/jquery.cookie.js"></script>
+    <script src="~/AdminAssets/lib/chartist/js/chartist.js"></script>
+    <script src="~/AdminAssets/lib/d3/js/d3.js"></script>
+    <script src="~/AdminAssets/lib/rickshaw/js/rickshaw.min.js"></script>
+    <script src="~/AdminAssets/lib/jquery.sparkline.bower/js/jquery.sparkline.min.js"></script>
+
+    <script src="~/AdminAssets/js/ResizeSensor.js"></script>
+    <script src="~/AdminAssets/js/dashboard.js"></script>
+    <script src="~/AdminAssets/js/slim.js"></script>
+</body>
+</html>
