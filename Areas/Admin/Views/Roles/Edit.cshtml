@@ -1,0 +1,51 @@
+﻿@model blog_web.Models.Role
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="slim-pageheader">
+    <ol class="breadcrumb slim-breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Roles" asp-action="Index">Roles</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+    <h6 class="slim-pagetitle">Edit Roles</h6>
+</div>
+
+<div class="section-wrapper">
+    <form asp-action="Edit">
+        <label class="section-title">Edit Roles</label>
+        <div class="form-layout form-layout-5">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RoleId"/>
+            <div class="row">
+                <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Role Name:</label>
+                <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                    <input asp-for="RoleName" type="text" class="form-control" placeholder="Role Name">
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+
+                </div>
+            </div><!-- row -->
+            <div class="row mg-t-20">
+                <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Description:</label>
+                <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                    <input asp-for="Description" type="text" class="form-control" placeholder="Description">
+                    <span asp-validation-for="Description" class="text-danger"></span>
+
+                </div>
+            </div>
+
+            <div class="row mg-t-30">
+                <div class="col-sm-8 mg-l-auto">
+                    <div class="form-layout-footer">
+                        <button asp-area="Admin" asp-controller="Roles" type="submit" class="btn btn-primary bd-0">Edit</button>
+                        <button asp-area="Admin" asp-controller="Roles" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
+                    </div><!-- form-layout-footer -->
+                </div><!-- col-8 -->
+            </div>
+        </div><!-- form-layout -->
+    </form>
+</div>
