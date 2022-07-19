@@ -15,7 +15,7 @@ namespace blog_web.Models
         public int CatId { get; set; }
         [Required(ErrorMessage = "Yêu cầu nhập")]
         public string CatName { get; set; }
-        [Required(ErrorMessage = "Yêu cầu nhập")]
+
         public string Title { get; set; }
 
         public string Alias { get; set; }
@@ -32,11 +32,9 @@ namespace blog_web.Models
         [Required(ErrorMessage = "Yêu cầu nhập")]
 
         public int? Ordering { get; set; }
-        [Required(ErrorMessage = "Yêu cầu nhập")]
 
         public int? Parent { get; set; }
 
-        [Required(ErrorMessage = "Yêu cầu nhập")]
         public int? Levels { get; set; }
 
         public string Icon { get; set; }

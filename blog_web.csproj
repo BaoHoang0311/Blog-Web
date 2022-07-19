@@ -31,6 +31,7 @@
     <Folder Include="wwwroot\AdminAssets\lib\echarts\extension\" />
     <Folder Include="wwwroot\AdminAssets\lib\summernote\lang\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\images\categories\" />
   </ItemGroup>
 
 </Project>

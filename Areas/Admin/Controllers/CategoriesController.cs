@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using blog_web.Models;
 using PagedList.Core;
+using Microsoft.AspNetCore.Http;
+using blog_web.Extension;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace blog_web.Areas.Admin.Controllers
 {
@@ -14,24 +18,24 @@ namespace blog_web.Areas.Admin.Controllers
     public class CategoriesController : Controller
     {
         private readonly blogdbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CategoriesController(blogdbContext context)
+        public CategoriesController(blogdbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Admin/Categories
         public IActionResult Index(int? page)
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 2 /*Utilities.PAGE_SIZE*/; // =20
-            var lsCategories = _context.Categories.OrderBy(x=>x.CatId);
+            var pageSize = 3;
+            var lsCategories = _context.Categories.OrderByDescending(x => x.CatId);
             PagedList<Category> models = new PagedList<Category>(lsCategories, pageNumber, pageSize);
 
             ViewBag.CurrentPage = pageNumber;
             return View(models);
-
-
         }
 
         // GET: Admin/Categories/Details/5
@@ -55,6 +59,7 @@ namespace blog_web.Areas.Admin.Controllers
         // GET: Admin/Categories/Create
         public IActionResult Create()
         {
+            ViewBag.Parent = new SelectList(_context.Categories.Where(x => x.Levels == 1), "CatId", "CatName");
             return View();
         }
 
@@ -63,20 +68,49 @@ namespace blog_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")] Category category)
+        public async Task<IActionResult> Create([Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]
+            Category category
+            , IFormFile fIcon, IFormFile fCover, IFormFile fThumb)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var rs = await _context.Categories.FirstOrDefaultAsync(m => m.CatName == category.CatName);
+                if (rs == null)
+                {
+                    category.Alias = category.CatName.ToUrlFriendly();
+
+                    if (category.Parent == null) category.Levels = 1;
+                    else category.Levels = category.Parent == 0 ? 1 : 2;
+
+                    if (fThumb != null) category.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
+                    if (fIcon != null) category.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
+                    if (fCover != null) category.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
+
+                    _context.Add(category);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(category);
             }
             return View(category);
         }
+        // tạo đường dẫn lưu vào wwwroot
+        private async Task<string> UploadImage(string folderPath, IFormFile file, string fileName)
+        {
+            string extension = Path.GetExtension(file.FileName);
 
+            folderPath += Utilities.SEOUrl(fileName) + "_preview" + extension;
+
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return "/" + folderPath;
+        }
         // GET: Admin/Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -95,17 +129,29 @@ namespace blog_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]
+        Category category, IFormFile fIcon, IFormFile fCover, IFormFile fThumb)
         {
-            if (id != category.CatId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var rs = _context.Categories.FirstOrDefault(x => x.CatId == id);
+
+                    category.Alias = category.CatName.ToUrlFriendly();
+ 
+                    if (category.Parent == null) category.Levels = 1;
+                    else category.Levels = category.Parent == 0 ? 1 : 2;
+
+                    if (fThumb != null) category.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
+                    else category.Thumb = rs.Thumb;
+
+                    if (fIcon != null) category.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
+                    else category.Icon = rs.Icon;
+
+                    if (fCover != null) category.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
+                    else category.Cover = rs.Cover;
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -113,7 +159,7 @@ namespace blog_web.Areas.Admin.Controllers
                 {
                     if (!CategoryExists(category.CatId))
                     {
-                        return NotFound();
+                        return View("Not Found");
                     }
                     else
                     {
