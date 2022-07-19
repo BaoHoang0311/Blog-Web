@@ -44,7 +44,7 @@
     <div class="slim-header">
         <div class="container">
             <div class="slim-header-left">
-                <h2 class="slim-logo"><a href="index.html">slim<span>.</span></a></h2>
+                <h2 class="slim-logo"><a href="/Admin/">Admin<span>.</span></a></h2>
 
                 <div class="search-box">
                     <input type="text" class="form-control" placeholder="Search">
@@ -257,5 +257,10 @@
     <script src="~/AdminAssets/js/ResizeSensor.js"></script>
     <script src="~/AdminAssets/js/dashboard.js"></script>
     <script src="~/AdminAssets/js/slim.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts_Admin", required: false)
 </body>
 </html>

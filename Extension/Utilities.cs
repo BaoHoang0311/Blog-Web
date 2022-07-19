@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace blog_web.Helper
+namespace blog_web.Extension
 {
     public static class Utilities
     {
@@ -25,6 +25,8 @@ namespace blog_web.Helper
             return sb.ToString();
         }
         public static int PAGE_SIZE = 20;
+        private static object _webHostEnvironment;
+
         public static string ToUrlFriendly(this string url)
         {
             var result = url.ToLower().Trim();

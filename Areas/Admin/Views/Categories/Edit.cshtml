@@ -5,88 +5,189 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Category</h4>
+<div class="slim-pageheader">
+    <ol class="breadcrumb slim-breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Categories" asp-action="Index">Quản lý danh mục</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+    <h6 class="slim-pagetitle">Edit Categories</h6>
+</div>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+
+<div class="section-wrapper">
+    <div class="form-layout">
+        <form asp-area="Admin" asp-controller="Categories" asp-action="Edit" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CatId" />
-            <div class="form-group">
-                <label asp-for="CatName" class="control-label"></label>
-                <input asp-for="CatName" class="form-control" />
-                <span asp-validation-for="CatName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alias" class="control-label"></label>
-                <input asp-for="Alias" class="form-control" />
-                <span asp-validation-for="Alias" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MetaDesc" class="control-label"></label>
-                <input asp-for="MetaDesc" class="form-control" />
-                <span asp-validation-for="MetaDesc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MetaKey" class="control-label"></label>
-                <input asp-for="MetaKey" class="form-control" />
-                <span asp-validation-for="MetaKey" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Thumb" class="control-label"></label>
-                <input asp-for="Thumb" class="form-control" />
-                <span asp-validation-for="Thumb" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Published" /> @Html.DisplayNameFor(model => model.Published)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ordering" class="control-label"></label>
-                <input asp-for="Ordering" class="form-control" />
-                <span asp-validation-for="Ordering" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Parent" class="control-label"></label>
-                <input asp-for="Parent" class="form-control" />
-                <span asp-validation-for="Parent" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Levels" class="control-label"></label>
-                <input asp-for="Levels" class="form-control" />
-                <span asp-validation-for="Levels" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Icon" class="control-label"></label>
-                <input asp-for="Icon" class="form-control" />
-                <span asp-validation-for="Icon" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cover" class="control-label"></label>
-                <input asp-for="Cover" class="form-control" />
-                <span asp-validation-for="Cover" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
+            <div class="row mg-b-25">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">Tên danh mục: <span class="tx-danger">*</span></label>
+                        <input asp-for="CatName" class="form-control" placeholder="Tên Danh Mục" />
+                        <span asp-validation-for="CatName" class="text-danger"></span>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">Danh Mục Cha: <span class="tx-danger">*</span></label>
+                        <select asp-for="Parent" class="form-control" asp-items="ViewBag.Parent">
+                            <option value="0" selected>Danh Mục Gốc</option>
+                        </select>
+                        <span asp-validation-for="Parent" class="text-danger"></span>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">Sắp xếp: <span class="tx-danger">*</span></label>
+                        <input asp-for="Ordering" type="number" value="0" class="form-control" />
+                        <span asp-validation-for="Ordering" class="text-danger"></span>
+                    </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-12">
+                    <div class="form-group mg-b-10-force">
+                        <label class="form-control-label">Mô tả <span class="tx-danger">*</span></label>
+                        <input asp-for="Description" class="form-control" placeholder="Mô tả" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div><!-- col-12 -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label">Ảnh đại diện: <span class="tx-danger">*</span></label>
+                        <span asp-validation-for="Thumb" class="text-danger"></span>
+                        <div class="custom-file">
+                            <input asp-for="Thumb" name="fThumb" type="file" id="fThumb">
+                            <label id="fThumb_name" for="customFile"></label>
+                        </div>
+                        <div class="form-group text-center">
+                            <img id="ProfilePicturePreview_Thumb" src="@Model.Thumb" onerror="this.onerror = null;
+                            this.src = '@Model.Thumb'" alt="" style="width:200px;height:200px" />
+                        </div>
+                    </div>
+
+                </div><!-- col-6-- Ảnh đại diện -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label">Cover: <span class="tx-danger">*</span></label>
+                        <span asp-validation-for="Cover" class="text-danger"></span>
+                        <div class="custom-file">
+                            <input asp-for="Cover" name="fCover" type="file" id="fCover">
+                            <label id="fCover_name" for="customFile"></label>
+                        </div>
+                        <div class="form-group text-center">
+                            <img id="ProfilePicturePreview_Cover" src="@Model.Cover" onerror="this.onerror = null;
+                            this.src = '@Model.Cover'" alt="" style="width:200px;height:200px" />
+                        </div>
+                    </div>
+                </div><!-- col-6-- Cover -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label">Icon: <span class="tx-danger">*</span></label>
+                        <span asp-validation-for="Icon" class="text-danger"></span>
+                        <div class="custom-file">
+                            <input asp-for="Icon" name="fIcon" type="file" id="fIcon">
+                            <label id="fIcon_name" for="customFile"></label>
+                        </div>
+                        <div class="form-group text-center">
+                            <img id="ProfilePicturePreview_Icon" src="@Model.Icon" onerror="this.onerror = null;
+                            this.src = '@Model.Icon'" alt="" style="width:200px;height:200px" />
+                        </div>
+                    </div>
+                </div><!-- col-6-- icon -->
+                <div class="col-lg-6">
+                    <div class="form-group form-check">
+                        <label class="form-check-label"> Trạng thái <span class="tx-danger">*</span></label>
+                        <br />
+                        <input class="form-check-input" asp-for="Published" /> @Html.DisplayNameFor(model => model.Published)
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group mg-b-10-force">
+                        <label class="form-control-label">Tiêu đề <span class="tx-danger">*</span></label>
+                        <input asp-for="Title" class="form-control" placeholder="Tiêu đề" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div><!-- col-12 -->
+                <div class="col-lg-12">
+                    <div class="form-group mg-b-10-force">
+                        <label class="form-control-label">MetaKey<span class="tx-danger">*</span></label>
+                        <input asp-for="MetaKey" class="form-control" placeholder="MetaKey" />
+                        <span asp-validation-for="MetaKey" class="text-danger"></span>
+                    </div>
+                </div><!-- col-12 -->
+                <div class="col-lg-12">
+                    <div class="form-group mg-b-10-force">
+                        <label class="form-control-label">MetaDesc <span class="tx-danger">*</span></label>
+                        <input asp-for="MetaDesc" class="form-control" placeholder="MetaDesc" />
+                        <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                    </div>
+                </div><!-- col-12 -->
+            </div><!-- row -->
+            <div class="form-layout-footer">
+                <button asp-route-id="@Model.CatId" type="submit" class="btn btn-primary bd-0">Edit</button>
+                <button asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
+            </div><!-- form-layout-footer -->
         </form>
-    </div>
+    </div><!-- form-layout -->
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts_Admin{
+    <script>
+        $('#Cover').ready(function () {
+            var output = document.getElementById('ProfilePicturePreview_Cover');
+            output.src = $("#Cover").val();
+        })
+        function readURL_cover(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
+                reader.onload = function (e) {
+                    $('#ProfilePicturePreview_Cover').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#fCover").change(function () {
+            readURL_cover(this);
+        });
+
+        $('#Thumb').ready(function () {
+            var output = document.getElementById('ProfilePicturePreview_Thumb');
+            output.src = $("#Thumb").val();
+        })
+        function readURL_Thumb(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#ProfilePicturePreview_Thumb').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#fThumb").change(function () {
+            readURL_Thumb(this);
+        });
+
+        $('#Icon').ready(function () {
+            var output = document.getElementById('ProfilePicturePreview_Icon');
+            output.src = $("#Icon").val();
+        })
+        function readURL_Icon(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#ProfilePicturePreview_Icon').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#fIcon").change(function () {
+            readURL_Icon(this);
+        });
+    </script>
+}
