@@ -12,7 +12,7 @@
         <li class="breadcrumb-item"><a asp-controller="Roles" asp-action="Index">Roles</a></li>
         <li class="breadcrumb-item active" aria-current="page">Roles Tables</li>
     </ol>
-    <h6 class="slim-pagetitle">Details</h6>
+    <h6 class="slim-pagetitle">Details Role</h6>
 </div>
 <div>
     <h4>Role</h4>
@@ -33,6 +33,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.RoleId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.RoleId" class="btn btn-warning">Edit</a>
+    <a asp-area="Admin" asp-controller="Roles" asp-action="Index" class="btn btn-secondary bd-0">Cancel</a>
 </div>

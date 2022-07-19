@@ -5,9 +5,14 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<div class="slim-pageheader">
+    <ol class="breadcrumb slim-breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Roles" asp-action="Index">Roles</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Delete</li>
+    </ol>
+    <h6 class="slim-pagetitle">Delete Role</h6>
+</div>
 <div>
     <h4>Role</h4>
     <hr />
@@ -29,6 +34,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="RoleId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <button asp-area="Admin" asp-controller="Roles" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
     </form>
 </div>
