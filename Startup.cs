@@ -37,7 +37,6 @@ namespace blog_web
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             #region Chưa biết
-            //services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
             //services.AddMemoryCache();
 
             //services.AddAuthentication("CookieAuthentication")

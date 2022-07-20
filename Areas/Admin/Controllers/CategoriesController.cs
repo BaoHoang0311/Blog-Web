@@ -45,7 +45,7 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.Parent = new SelectList(_context.Categories.Where(x => x.Levels == 1), "CatId", "CatName");
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.CatId == id);
             if (category == null)
@@ -115,7 +115,7 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.Parent = new SelectList(_context.Categories.Where(x => x.Levels == 1), "CatId", "CatName");
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
@@ -127,11 +127,14 @@ namespace blog_web.Areas.Admin.Controllers
         // POST: Admin/Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [BindProperty]
+        public Category category { get; set; }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]
+        public async Task<IActionResult> Edit(int id, /*[Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]*/
         Category category, IFormFile fIcon, IFormFile fCover, IFormFile fThumb)
         {
+
             if (ModelState.IsValid)
             {
                 try
