@@ -17,9 +17,8 @@
 
 <div class="section-wrapper">
     <div class="form-layout">
-        <form asp-area="Admin" asp-controller="Categories" asp-action="Edit" enctype="multipart/form-data" method="post">
+        <form   asp-area="Admin" asp-controller="Categories" asp-action="Edit" enctype="multipart/form-data" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            i
             <div class="row mg-b-25">
                 <div class="col-lg-4">
                     <div class="form-group">
@@ -32,7 +31,7 @@
                     <div class="form-group">
                         <label class="form-control-label">Danh Mục Cha: <span class="tx-danger">*</span></label>
                         <select asp-for="Parent" class="form-control" asp-items="ViewBag.Parent">
-                            @*<option value="0" selected>Danh Mục Gốc</option>*@
+                            <option value="0" >Danh Mục Gốc</option>
                         </select>
                         <span asp-validation-for="Parent" class="text-danger"></span>
                     </div>
@@ -124,7 +123,7 @@
                 </div><!-- col-12 -->
             </div><!-- row -->
             <div class="form-layout-footer">
-                <button asp-route-id="@Model.CatId" type="submit" class="btn btn-primary bd-0">Edit</button>
+                <input asp-route-CatId="@Model.CatId" type="submit" class="btn btn-primary bd-0"  value="Confirm">
                 <button asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
             </div><!-- form-layout-footer -->
         </form>

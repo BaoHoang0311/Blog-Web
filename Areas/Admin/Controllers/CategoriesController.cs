@@ -99,7 +99,7 @@ namespace blog_web.Areas.Admin.Controllers
         {
             string extension = Path.GetExtension(file.FileName);
 
-            folderPath += Utilities.SEOUrl(fileName) + "_preview" + extension;
+            folderPath += Utilities.SEOUrl(fileName) + "_preview_" +Guid.NewGuid() + extension;
 
             string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
 
@@ -127,11 +127,9 @@ namespace blog_web.Areas.Admin.Controllers
         // POST: Admin/Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [BindProperty]
-        public Category category { get; set; }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, /*[Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]*/
+        public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]
         Category category, IFormFile fIcon, IFormFile fCover, IFormFile fThumb)
         {
 
@@ -140,22 +138,23 @@ namespace blog_web.Areas.Admin.Controllers
                 try
                 {
                     var rs = _context.Categories.FirstOrDefault(x => x.CatId == id);
+                    rs.CatName = category.CatName;
+                    rs.Title = category.Title;
+                    rs.Alias = category.CatName.ToUrlFriendly();
+                    rs.MetaDesc = category.MetaDesc;
+                    rs.MetaKey = category.MetaKey;
+                    rs.Published = category.Published;
+                    rs.Ordering = category.Ordering;
+                    rs.Description = category.Description;
+                    rs.Parent = category.Parent;
+                    rs.Levels = category.Parent == 0 ? 1 : 2;
 
-                    category.Alias = category.CatName.ToUrlFriendly();
- 
-                    if (category.Parent == null) category.Levels = 1;
-                    else category.Levels = category.Parent == 0 ? 1 : 2;
 
-                    if (fThumb != null) category.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
-                    else category.Thumb = rs.Thumb;
+                    if (fThumb != null) rs.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
+                    if (fIcon != null) rs.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
+                    if (fCover != null) rs.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
 
-                    if (fIcon != null) category.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
-                    else category.Icon = rs.Icon;
-
-                    if (fCover != null) category.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
-                    else category.Cover = rs.Cover;
-
-                    _context.Update(category);
+                    _context.Update(rs);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

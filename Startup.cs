@@ -28,14 +28,14 @@ namespace blog_web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            
             services.AddDbContext<blogdbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaulConnectionString")));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-
+            services.AddControllersWithViews();
             #region Chưa biết
             //services.AddMemoryCache();
 
