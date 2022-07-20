@@ -25,7 +25,6 @@ namespace blog_web.Extension
             return sb.ToString();
         }
         public static int PAGE_SIZE = 20;
-        private static object _webHostEnvironment;
 
         public static string ToUrlFriendly(this string url)
         {
