@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using blog_web.Models;
 using PagedList.Core;
+using blog_web.Extension;
+using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Http;
 
 namespace blog_web.Areas.Admin.Controllers
 {
@@ -14,20 +17,21 @@ namespace blog_web.Areas.Admin.Controllers
     public class PostsController : Controller
     {
         private readonly blogdbContext _context;
+        private readonly Saveimage save;
 
-        public PostsController(blogdbContext context)
+        public PostsController(blogdbContext context, Saveimage _save)
         {
             _context = context;
+            save = _save;
         }
-
         // GET: Admin/Posts
-        public  IActionResult Index(int ? page )
+        public IActionResult Index(int? page)
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 3;
             var lsPost = _context.Posts.Include(p => p.Account)
                 .Include(p => p.Cat)
-                .OrderByDescending(x=>x.PostId);
+                .OrderByDescending(x => x.PostId);
             PagedList<Post> models = new PagedList<Post>(lsPost, pageNumber, pageSize);
             return View(models);
         }
@@ -55,8 +59,7 @@ namespace blog_web.Areas.Admin.Controllers
         // GET: Admin/Posts/Create
         public IActionResult Create()
         {
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId");
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName");
+            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
 
@@ -65,16 +68,24 @@ namespace blog_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Title,ShortContent,Contents,Thumb,Published,Alias,CreatedAt,Author,Tags,IsHot,IsNewFeed,AccountId,CatId")] Post post)
+        public async Task<IActionResult> Create(
+            [Bind("PostId,Title,ShortContent,Contents,Thumb,Published,Alias" +
+            ",CreatedAt,Author,Tags,IsHot,IsNewFeed,AccountId,CatId")]
+            Post post
+            , IFormFile fThumb)
         {
             if (ModelState.IsValid)
             {
+                post.Alias = post.Title.ToUrlFriendly();
+                post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
+
                 _context.Add(post);
                 await _context.SaveChangesAsync();
+      
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId", post.AccountId);
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
+            ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
+            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             return View(post);
         }
 
@@ -85,14 +96,13 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId", post.AccountId);
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
+            ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
+            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             return View(post);
         }
 
@@ -101,7 +111,8 @@ namespace blog_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,ShortContent,Contents,Thumb,Published,Alias,CreatedAt,Author,Tags,IsHot,IsNewFeed,AccountId,CatId")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,ShortContent,Contents,Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
+        Post post, IFormFile fThumb)
         {
             if (id != post.PostId)
             {
@@ -113,6 +124,8 @@ namespace blog_web.Areas.Admin.Controllers
                 try
                 {
                     _context.Update(post);
+                    if(fThumb!=null)
+                        await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -128,8 +141,10 @@ namespace blog_web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId", post.AccountId);
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
+            //ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId", post.AccountId);
+            //ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
+            ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
+            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             return View(post);
         }
 
@@ -145,6 +160,7 @@ namespace blog_web.Areas.Admin.Controllers
                 .Include(p => p.Account)
                 .Include(p => p.Cat)
                 .FirstOrDefaultAsync(m => m.PostId == id);
+            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             if (post == null)
             {
                 return NotFound();
@@ -159,6 +175,7 @@ namespace blog_web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var post = await _context.Posts.FindAsync(id);
+
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

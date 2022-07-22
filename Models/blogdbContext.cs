@@ -62,10 +62,6 @@ namespace blog_web.Models
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
-                entity.Property(e => e.Salt)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)

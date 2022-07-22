@@ -1,4 +1,5 @@
-﻿using blog_web.Models;
+﻿using blog_web.Extension;
+using blog_web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,8 +35,11 @@ namespace blog_web
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
+
+            services.AddScoped<Saveimage>();
             #region Chưa biết
             //services.AddMemoryCache();
 
@@ -77,10 +81,8 @@ namespace blog_web
 
             app.UseRouting();
 
-            // Bạn là ai
-            app.UseAuthorization();
-            // Bạn được làm gì
-            app.UseAuthentication();
+            app.UseAuthorization(); //who
+            app.UseAuthentication(); //permit
 
           
             app.UseEndpoints(endpoints =>
@@ -96,3 +98,4 @@ namespace blog_web
         }
     }
 }
+//dotnet ef dbcontext scaffold -o Models -f "Data Source=localhost,1433;Initial Catalog=blog-db;User ID=sa;Password=CASter789" "Microsoft.EntityFrameworkCore.SqlServer"

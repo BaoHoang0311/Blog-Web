@@ -4,8 +4,6 @@
     ViewData["Title"] = "Create_Categories";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-
-
 <!--new form-->
 <div class="slim-pageheader">
     <ol class="breadcrumb slim-breadcrumb">
@@ -57,7 +55,6 @@
                         <span asp-validation-for="Thumb" class="text-danger"></span>
                         <div class="custom-file">
                             <input asp-for="Thumb" name="fThumb" type="file" id="fThumb">
-                            @*<input name="fThumb" type="file" class="form-control-file" asp-for="Thumb" />*@
                             <label id="fThumb_name" for="customFile"></label>
                         </div>
                     </div>
@@ -127,19 +124,5 @@
         </form>
     </div><!-- form-layout -->
 </div>
-
-@*@section Scripts_Admin{
-    <script>
-        $("#fThumb_name").change(function () {
-            $("#fThumb").text(this.files[0].name);
-        });
-        $("#fIcon_name").change(function () {
-            $("#fIcon").text(this.files[0].name);
-        });
-        $("#fCover_name").change(function () {
-            $("#fCover").text(this.files[0].name);
-        });
-    </script>
-}*@
 
 
