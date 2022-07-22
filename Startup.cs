@@ -39,7 +39,7 @@ namespace blog_web
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
 
-            services.AddScoped<Saveimgae>();
+            services.AddScoped<Saveimage>();
             #region Chưa biết
             //services.AddMemoryCache();
 

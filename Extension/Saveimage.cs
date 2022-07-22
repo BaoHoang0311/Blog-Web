@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace blog_web.Extension
 {
-    public class Saveimgae
+    public class Saveimage
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public Saveimgae(IWebHostEnvironment webHostEnvironment)
+        public Saveimage(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
         }

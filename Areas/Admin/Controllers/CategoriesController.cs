@@ -149,7 +149,6 @@ namespace blog_web.Areas.Admin.Controllers
                     rs.Parent = category.Parent;
                     rs.Levels = category.Parent == 0 ? 1 : 2;
 
-
                     if (fThumb != null) rs.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
                     if (fIcon != null) rs.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
                     if (fCover != null) rs.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
@@ -180,7 +179,7 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.Parent = new SelectList(_context.Categories.Where(x => x.Levels == 1), "CatId", "CatName");
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.CatId == id);
             if (category == null)

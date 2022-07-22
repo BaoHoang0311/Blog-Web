@@ -22,8 +22,10 @@
 
 <div class="section-wrapper">
     <div class="form-layout">
-        <form asp-area="Admin" asp-controller="Post" asp-action="Create" enctype="multipart/form-data" method="post">
+        <form enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @*<input type="hidden"  asp-for="Thumb"/>*@
             <div class="row mg-b-25">
                 <div class="col-lg-12">
                     <div class="form-group">
@@ -35,7 +37,7 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label class="form-control-label">Miêu tả ngắn: <span class="tx-danger">*</span></label>
-                        <input asp-for="ShortContent"type="text" maxlength ="254" class="form-control" placeholder="Miêu tả ngắn" />
+                        <input asp-for="ShortContent" type="text" maxlength="254" class="form-control" placeholder="Miêu tả ngắn" />
                         <span asp-validation-for="ShortContent" class="text-danger"></span>
                     </div>
                 </div><!-- col-12 -->
@@ -50,9 +52,10 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="form-control-label">Ảnh đại diện: <span class="tx-danger">*</span></label>
-                        <span asp-validation-for="Thumb" class="text-danger"></span>
+                        <span asp-validation-for="Thumb" class="text-danger" ></span>
+
                         <div class="custom-file">
-                            <input asp-for="Thumb" name="fThumb" type="file" id="fThumb">
+                            <input asp-for="Thumb" name="fThumb" type="file" id="fThumb" required>
                             <label id="fThumb_name" for="customFile"></label>
                         </div>
                     </div>
@@ -60,12 +63,10 @@
 
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="form-control-label">Tags: <span class="tx-danger">*</span></label>
-                        <input asp-for="Tags" />
-                        <span asp-validation-for="Tags" class="text-danger"></span>
+                        <label class="form-control-label">CreatedAt:</label>
+                        <input type="date" asp-for="CreatedAt"  />
                     </div>
                 </div>
-
                 <div class="col-lg-6">
                     <div class="form-group">
                         <input type="checkbox" asp-for="Published"><span> Published</span>
@@ -90,8 +91,8 @@
 
 
                 <div class="form-layout-footer">
-                    <button asp-area="Admin" asp-controller="Post" asp-action="Create" class="btn btn-primary bd-0">Create</button>
-                    <button asp-area="Admin" asp-controller="Post" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
+                    <button asp-area="Admin" asp-controller="Posts" asp-action="Create" class="btn btn-primary bd-0">Create</button>
+                    <button asp-area="Admin" asp-controller="Posts" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
                 </div><!-- form-layout-footer -->
             </div>
         </form>
