@@ -9,6 +9,7 @@ using blog_web.Models;
 using PagedList.Core;
 using blog_web.Extension;
 using Microsoft.AspNetCore.Http;
+using blog_web.Data.Extension;
 //using Microsoft.AspNetCore.Http;
 
 namespace blog_web.Areas.Admin.Controllers

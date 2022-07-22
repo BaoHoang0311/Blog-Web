@@ -1,4 +1,5 @@
-﻿using blog_web.Extension;
+﻿using blog_web.Data.Extension;
+using blog_web.Extension;
 using blog_web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,6 +41,7 @@ namespace blog_web
             services.AddControllersWithViews();
 
             services.AddScoped<Saveimage>();
+
             #region Chưa biết
             //services.AddMemoryCache();
 

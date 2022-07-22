@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace blog_web.Extension
+namespace blog_web.Data.Extension
 {
     public static class Utilities
     {
