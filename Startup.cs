@@ -1,6 +1,7 @@
 ﻿using blog_web.Data.Extension;
 using blog_web.Extension;
 using blog_web.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,16 +35,32 @@ namespace blog_web
             services.AddDbContext<blogdbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaulConnectionString")));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+ 
+
             services.AddSession();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
             services.AddControllersWithViews();
 
             services.AddScoped<Saveimage>();
 
+            services.AddMemoryCache();
+
+            services.AddAuthentication("CookieAuthentication_zz")
+                    .AddCookie("CookieAuthentication_zz", config =>
+                    {
+                        config.Cookie.Name = "UserLoginCookie";
+                        config.ExpireTimeSpan = TimeSpan.FromDays(1);
+                        //config.LoginPath = "/dang-nhap.html";
+                        //config.LogoutPath = "/dang-xuat.html";
+                        //config.AccessDeniedPath = "/not-found.html";
+                    });
+
+
             #region Chưa biết
-            //services.AddMemoryCache();
+
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //services.AddAuthentication("CookieAuthentication")
             //        .AddCookie("CookieAuthentication", config =>
@@ -54,6 +71,7 @@ namespace blog_web
             //            config.LogoutPath = "/dang-xuat.html";
             //            config.AccessDeniedPath = "/not-found.html";
             //        });
+
             //services.ConfigureApplicationCookie(options =>
             //{
             //    // Cookie settings,only this changes expiration
@@ -77,14 +95,17 @@ namespace blog_web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            //app.UseSession();
+           
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization(); //who
-            app.UseAuthentication(); //permit
+            app.UseSession();
+
+            app.UseAuthentication(); // xác thực
+
+            app.UseAuthorization(); // quyền
 
           
             app.UseEndpoints(endpoints =>

@@ -10,11 +10,14 @@ using PagedList.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using blog_web.Areas.Admin.Data.ViewModel;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+
 
 namespace blog_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AccountsController : Controller
     {
         private readonly blogdbContext _context;
@@ -27,34 +30,77 @@ namespace blog_web.Areas.Admin.Controllers
         // GET: Admin/Login
         [HttpGet]
         [AllowAnonymous]
-        [Route("dang-nhap.html", Name = "Login")]
+        [Route("dang-nhap", Name = "Login")]
         public IActionResult Login(string returnUrl = null)
         {
-            var taikhoanID = HttpContext.Session.GetString("AccountId");
+            var taikhoanID = HttpContext.Session.GetString("id_tai_khoan");
             if (taikhoanID != null)
                 return RedirectToAction("Index", "Home", new { Area = "Admin" });
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View("Login");
         }
-        //[HttpGet]
-        //[AllowAnonymous]
-        //[Route("dang-nhap.html", Name = "Login")]
-        //public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            Account kh = _context.Accounts
-        //                            .Include(p => p.Role)
-        //                            .SingleOrDefault(p => p.Email.ToLower() == model.Email.Tolower().Trim());
-        //        }
-        //    }
-        //    catch
-        //    {
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("dang-nhap", Name = "Login")]
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Account kh = _context.Accounts
+                                    .Include(p => p.Role)
+                                    .SingleOrDefault(p => p.Email.ToLower() == model.EmailAddress.ToLower().Trim());
+                    if (kh == null)
+                    {
+                        ViewBag.Error = "Thông tin đăng nhập chưa chính xác";
+                        return View(model);
+                    }
+                    string pass = model.Password.Trim();
+                    if (kh.Password.Trim() != pass)
+                    {
+                        ViewBag.Error = "Thông tin đăng nhập chưa chính xác";
+                        return View(model);
+                    }
+                    // đăng nhập thành công
+                    kh.LastLogin = DateTime.Now;
+                    _context.Update(kh);
+                    await _context.SaveChangesAsync();
 
-        //    }
-        //}
+                    //Identity
+                    // Lưu session MaKH
+                    HttpContext.Session.SetString("id_tai_khoan", kh.AccountId.ToString());
+                    //Identity
+                    var userClaims = new List<Claim>
+                    {
+                                new Claim(ClaimTypes.Name, kh.FullName),
+                                new Claim(ClaimTypes.Email, kh.Email),
+                                new Claim("AccountId", kh.AccountId.ToString()),
+                                new Claim("RoleId", kh.RoleId.ToString()),
+                                new Claim(ClaimTypes.Role, kh.Role.RoleName),
+                    };
+                    //c1
+                    //var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                    //var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
+                    //await HttpContext.SignInAsync(userPrincipal);
+
+                    //c2
+                    var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                    await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
+
+                    if (Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    return RedirectToAction("Index", "Home", new { Area = "Admin" });
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
+            }
+            return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
+        }
 
 
 

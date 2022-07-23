@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace blog_web.Data.Areas.Data.ViewModel
+namespace blog_web.Areas.Admin.Data.ViewModel
 {
     public class LoginViewModel
     {

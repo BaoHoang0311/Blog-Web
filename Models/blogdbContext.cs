@@ -45,12 +45,10 @@ namespace blog_web.Models
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(255)
-                    .IsFixedLength(true);
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.FullName)
-                    .HasMaxLength(50)
-                    .IsFixedLength(true);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.LastLogin).HasColumnType("datetime");
 
