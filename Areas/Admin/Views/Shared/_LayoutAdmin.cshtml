@@ -109,6 +109,29 @@
                         </div>
                     </div><!-- dropdown-menu-right -->
                 </div><!-- dropdown -->
+                <div>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        @*Login*@
+                        <a class="btn btn-outline-warning mr-2" asp-area="Admin"
+                           asp-controller="Accounts" asp-action="Login">
+                            <i class="bi bi-box-arrow-in-right mr-2">
+                                LogIn
+                            </i>
+                        </a>
+                    }
+                    else
+                    {
+                        @*SignOut*@
+                        <span style="padding:5px;"></span>
+                        <form asp-area="Admin" asp-controller="Accounts" asp-action="Logout">
+                            <button class="btn btn-outline-danger">
+                                <i class="bi bi-box-arrow-left mr-2"></i>LogOut
+                            </button>
+                        </form>
+                    }
+
+                </div><!-- Login -->
                 <div class="dropdown dropdown-b">
                     <a href="" class="header-notification" data-toggle="dropdown">
                         <i class="icon ion-ios-bell-outline"></i>

@@ -10,7 +10,8 @@ using PagedList.Core;
 using blog_web.Extension;
 using Microsoft.AspNetCore.Http;
 using blog_web.Data.Extension;
-//using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace blog_web.Areas.Admin.Controllers
 {
@@ -68,10 +69,6 @@ namespace blog_web.Areas.Admin.Controllers
             ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
-
-        // POST: Admin/Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
@@ -82,17 +79,17 @@ namespace blog_web.Areas.Admin.Controllers
         {
             // phải đăng nhập để đăng bài
             if (!User.Identity.IsAuthenticated) RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
-            var id = HttpContext.Session.GetString("id_tai_khoan");
-            if (id == null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
-            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(id));
+            var taikhoan_id = HttpContext.Session.GetString("id_tai_khoan");
+            if (taikhoan_id == null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(taikhoan_id));
             if (taikhoan == null) return NotFound();
 
             if (ModelState.IsValid)
             {
+                post.AccountId = int.Parse(taikhoan_id);
+                post.Author = taikhoan.FullName;
                 post.Alias = post.Title.ToUrlFriendly();
                 post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
-                post.AccountId = int.Parse(id);
-                post.Author = taikhoan.FullName;
                 if (post.CreatedAt == null) post.CreatedAt = DateTime.Now;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
@@ -111,7 +108,19 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            // phải đăng nhập mới chỉnh sửa
+            if (!User.Identity.IsAuthenticated) RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+
+            var taikhoan_id = HttpContext.Session.GetString("id_tai_khoan");
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(taikhoan_id));
+
+            if (taikhoan == null) return NotFound();
+
             var post = await _context.Posts.FindAsync(id);
+
+            // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
+            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin") return RedirectToAction(nameof(Index));
+
             if (post == null)
             {
                 return NotFound();
@@ -121,12 +130,10 @@ namespace blog_web.Areas.Admin.Controllers
             return View(post);
         }
 
-        // POST: Admin/Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,ShortContent,Contents,Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,ShortContent,Contents," +
+            "Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
         Post post, IFormFile fThumb)
         {
             if (id != post.PostId)
@@ -134,14 +141,29 @@ namespace blog_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            if (!User.Identity.IsAuthenticated) RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+
+            var taikhoan_id = HttpContext.Session.GetString("id_tai_khoan");
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(taikhoan_id));
+
+            if (taikhoan == null) return NotFound();
+
+            // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
+            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin") return RedirectToAction(nameof(Index));
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    post.AccountId = int.Parse(taikhoan_id);
+                    post.Author = taikhoan.FullName;
+                    post.Alias = post.Title.ToUrlFriendly();
+                    if(fThumb != null) post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
+                    if (post.CreatedAt == null) post.CreatedAt = DateTime.Now;
+
                     _context.Update(post);
-                    if(fThumb!=null)
-                        await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -154,10 +176,7 @@ namespace blog_web.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            //ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId", post.AccountId);
-            //ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
             ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             return View(post);

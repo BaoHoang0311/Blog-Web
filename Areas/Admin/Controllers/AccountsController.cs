@@ -33,10 +33,7 @@ namespace blog_web.Areas.Admin.Controllers
         [Route("dang-nhap", Name = "Login")]
         public IActionResult Login(string returnUrl = null)
         {
-            var taikhoanID = HttpContext.Session.GetString("id_tai_khoan");
-            if (taikhoanID != null)
-                return RedirectToAction("Index", "Home", new { Area = "Admin" });
-            ViewBag.ReturnUrl = returnUrl;
+            if(User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home", new { Area = "Admin" });
             return View("Login");
         }
         [HttpPost]
@@ -101,7 +98,12 @@ namespace blog_web.Areas.Admin.Controllers
             }
             return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
         }
-
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("CookieAuthentication_zz");
+            return RedirectToAction("Index", "Home", new { Area = "Admin" });
+        }
 
 
 
