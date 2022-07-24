@@ -9,6 +9,7 @@ using blog_web.Models;
 using PagedList.Core;
 using blog_web.Extension;
 using Microsoft.AspNetCore.Http;
+using blog_web.Data.Extension;
 //using Microsoft.AspNetCore.Http;
 
 namespace blog_web.Areas.Admin.Controllers
@@ -59,6 +60,11 @@ namespace blog_web.Areas.Admin.Controllers
         // GET: Admin/Posts/Create
         public IActionResult Create()
         {
+            // phải đăng nhập để đăng bài
+            if (!User.Identity.IsAuthenticated) 
+                RedirectToAction("Login", "Accounts", new { Areas = "Admin"});
+            var taikhoanID = HttpContext.Session.GetString("id_tai_khoan");
+            if(taikhoanID ==null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
             ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
@@ -74,11 +80,20 @@ namespace blog_web.Areas.Admin.Controllers
             Post post
             , IFormFile fThumb)
         {
+            // phải đăng nhập để đăng bài
+            if (!User.Identity.IsAuthenticated) RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+            var id = HttpContext.Session.GetString("id_tai_khoan");
+            if (id == null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(id));
+            if (taikhoan == null) return NotFound();
+
             if (ModelState.IsValid)
             {
                 post.Alias = post.Title.ToUrlFriendly();
                 post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
-
+                post.AccountId = int.Parse(id);
+                post.Author = taikhoan.FullName;
+                if (post.CreatedAt == null) post.CreatedAt = DateTime.Now;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
       

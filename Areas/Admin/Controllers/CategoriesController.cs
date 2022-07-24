@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using blog_web.Extension;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using blog_web.Data.Extension;
 
 namespace blog_web.Areas.Admin.Controllers
 {

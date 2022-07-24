@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace blog_web.Extension
+namespace blog_web.Data.Extension
 {
     public class Saveimage
     {
