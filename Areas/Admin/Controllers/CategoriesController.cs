@@ -12,10 +12,12 @@ using blog_web.Extension;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using blog_web.Data.Extension;
+using Microsoft.AspNetCore.Authorization;
 
 namespace blog_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize()]
     public class CategoriesController : Controller
     {
         private readonly blogdbContext _context;
@@ -64,9 +66,6 @@ namespace blog_web.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]
@@ -125,9 +124,6 @@ namespace blog_web.Areas.Admin.Controllers
             return View(category);
         }
 
-        // POST: Admin/Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]

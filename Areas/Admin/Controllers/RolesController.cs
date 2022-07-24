@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using blog_web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace blog_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles="Admin")]
     public class RolesController : Controller
     {
         private readonly blogdbContext _context;
@@ -49,9 +51,6 @@ namespace blog_web.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/Roles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RoleId,RoleName,Description")] Role role)
@@ -80,10 +79,6 @@ namespace blog_web.Areas.Admin.Controllers
             }
             return View(role);
         }
-
-        // POST: Admin/Roles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
         [ValidateAntiForgeryToken]

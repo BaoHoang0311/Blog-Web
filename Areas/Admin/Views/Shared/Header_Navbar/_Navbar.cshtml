@@ -1,0 +1,44 @@
+﻿<div class="slim-navbar">
+    <div class="container">
+        <ul class="nav">
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    <i class="icon ion-ios-home-outline"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>  <!--Dashboard-->
+
+            <li class="nav-item with-sub">
+                <a class="nav-link" href="#">
+                    <i class="icon ion-android-document"></i>
+                    <span>Bài Viết</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li><a asp-area="Admin" asp-controller="Posts" asp-action="Index">QUẢN LÝ BÀI VIẾT </a></li>
+                        <li><a asp-area="Admin" asp-controller="Posts" asp-action="Create"> THÊM MỚI </a></li>
+                    </ul>
+                </div> <!-- dropdown-menu -->
+            </li><!--Bài viết-->
+            <li class="nav-item with-sub">
+                <a class="nav-link" href="#">
+                    <i class="icon ion-information-circled"></i>
+                    <span>Hệ Thống</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li><a asp-area="Admin" asp-controller="Categories" asp-action="Index">QUẢN LÝ DANH MỤC</a></li>
+                        <li><a asp-area="Admin" asp-controller="Accounts" asp-action="Index"> QUẢN LÝ TÀI KHOẢN</a></li>
+                        <li><a asp-area="Admin" asp-controller="Roles" asp-action="Index"> QUYỀN TRUY CẬP</a></li>
+                    </ul>
+                </div> <!-- dropdown-menu -->
+            </li><!--Hệ thống-->
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-controller="Advertisements" asp-action="Index">
+                    <i class="icon ion-android-favorite"></i>
+                    <span>QUẢNG CÁO</span>
+                </a>
+            </li> <!--Quảng cáo-->
+        </ul>
+    </div><!-- container -->
+</div>

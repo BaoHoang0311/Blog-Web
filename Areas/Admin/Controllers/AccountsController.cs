@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authentication;
 namespace blog_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AccountsController : Controller
     {
         private readonly blogdbContext _context;
@@ -27,18 +27,19 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
         }
 
+
         // GET: Admin/Login
         [HttpGet]
         [AllowAnonymous]
-        [Route("dang-nhap", Name = "Login")]
-        public IActionResult Login(string returnUrl = null)
+        [Route("dang-nhap")]
+        public IActionResult Login()
         {
-            if(User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home", new { Area = "Admin" });
-            return View("Login");
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            return View("LogIn");
         }
         [HttpPost]
         [AllowAnonymous]
-        [Route("dang-nhap", Name = "Login")]
+        [Route("dang-nhap")]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             try
@@ -60,6 +61,7 @@ namespace blog_web.Areas.Admin.Controllers
                         return View(model);
                     }
                     // đăng nhập thành công
+                    //Cập nhật ngày
                     kh.LastLogin = DateTime.Now;
                     _context.Update(kh);
                     await _context.SaveChangesAsync();
@@ -76,11 +78,6 @@ namespace blog_web.Areas.Admin.Controllers
                                 new Claim("RoleId", kh.RoleId.ToString()),
                                 new Claim(ClaimTypes.Role, kh.Role.RoleName),
                     };
-                    //c1
-                    //var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
-                    //var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
-                    //await HttpContext.SignInAsync(userPrincipal);
-
                     //c2
                     var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
                     await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
@@ -98,29 +95,20 @@ namespace blog_web.Areas.Admin.Controllers
             }
             return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
         }
-        [HttpPost]
+
+        [Route("dang-xuat")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("CookieAuthentication_zz");
-            return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            try
+            {
+                await HttpContext.SignOutAsync("CookieAuthentication_zz");
+                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // GET: Admin/Accounts
         public IActionResult Index(int? page)
@@ -158,24 +146,22 @@ namespace blog_web.Areas.Admin.Controllers
         // GET: Admin/Accounts/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Description");
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
-
-        // POST: Admin/Accounts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountId,FullName,Email,Phone,Password,Active,CreatedAt,RoleId,LastLogin")] Account account)
+        public async Task<IActionResult> Create([Bind("AccountId,FullName,Email,Phone,Password," +
+            "Active,CreatedAt,RoleId,LastLogin")] Account account)
         {
             if (ModelState.IsValid)
             {
+                if (account.CreatedAt == null) account.CreatedAt = DateTime.Now;
                 _context.Add(account);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", account.RoleId);
             return View(account);
         }
 
@@ -192,16 +178,14 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", account.RoleId);
             return View(account);
         }
 
-        // POST: Admin/Accounts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AccountId,FullName,Email,Phone,Password,Active,CreatedAt,RoleId,LastLogin")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("AccountId,FullName,Email," +
+            "Phone,Password,Active,CreatedAt,RoleId,LastLogin")] Account account)
         {
             if (id != account.AccountId)
             {
@@ -212,7 +196,6 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -228,7 +211,7 @@ namespace blog_web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", account.RoleId);
             return View(account);
         }
 
@@ -265,6 +248,12 @@ namespace blog_web.Areas.Admin.Controllers
         private bool AccountExists(int id)
         {
             return _context.Accounts.Any(e => e.AccountId == id);
+        }
+        [AllowAnonymous]
+        [Route("not-found")]
+        public IActionResult AccessDenied()
+        {
+            return View("NOTFOUND");
         }
     }
 }
