@@ -11,24 +11,12 @@ namespace blog_web.Extension
     {
         public static string GetAccountID(this ClaimsPrincipal identity)
         {
-            var claim = identity.FindFirst("AccountId");
+            var claim = identity.FindFirst("Account_Id");
             return (claim != null) ? claim.Value : string.Empty;
         }
         public static string GetRoleID(this ClaimsPrincipal identity)
         {
-            var claim = identity.FindFirst("RoleId");
-            return (claim != null) ? claim.Value : string.Empty;
-        }
-        public static string GetUserName(this ClaimsPrincipal identity)
-        {
-            var claim = identity.FindFirst("UserName");
-            // Test for null to avoid issues during local testing
-            return (claim != null) ? claim.Value : string.Empty;
-        }
-        public static string GetAvatar(this ClaimsPrincipal identity)
-        {
-            var claim = identity.FindFirst("Avatar");
-            // Test for null to avoid issues during local testing
+            var claim = identity.FindFirst("Role_Id");
             return (claim != null) ? claim.Value : string.Empty;
         }
         public static string GetSpecificClaim(this ClaimsPrincipal claimsPrincipal, string claimType)

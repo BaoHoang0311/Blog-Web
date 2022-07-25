@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Authorization;
 using blog_web.Areas.Admin.Data.ViewModel;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-
+using blog_web.Extension;
 
 namespace blog_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize()]
     public class AccountsController : Controller
     {
         private readonly blogdbContext _context;
@@ -27,11 +27,10 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
         }
 
-
         // GET: Admin/Login
         [HttpGet]
         [AllowAnonymous]
-        [Route("dang-nhap")]
+        [Route("dang-nhap.html")]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home", new { Area = "Admin" });
@@ -39,7 +38,7 @@ namespace blog_web.Areas.Admin.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        [Route("dang-nhap")]
+        [Route("dang-nhap.html")]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             try
@@ -74,8 +73,8 @@ namespace blog_web.Areas.Admin.Controllers
                     {
                                 new Claim(ClaimTypes.Name, kh.FullName),
                                 new Claim(ClaimTypes.Email, kh.Email),
-                                new Claim("AccountId", kh.AccountId.ToString()),
-                                new Claim("RoleId", kh.RoleId.ToString()),
+                                new Claim("Account_Id", kh.AccountId.ToString()),
+                                new Claim("Role_Id", kh.RoleId.ToString()),
                                 new Claim(ClaimTypes.Role, kh.Role.RoleName),
                     };
                     //c2
@@ -96,12 +95,13 @@ namespace blog_web.Areas.Admin.Controllers
             return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
         }
 
-        [Route("dang-xuat")]
+        [Route("dang-xuat.html")]
         public async Task<IActionResult> Logout()
         {
             try
             {
                 await HttpContext.SignOutAsync("CookieAuthentication_zz");
+                HttpContext.Session.Remove("id_tai_khoan");
                 return RedirectToAction("Index", "Home", new { Area = "Admin" });
             }
             catch
@@ -111,6 +111,7 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts
+        [Authorize(Roles = "Admin")]
         public IActionResult Index(int? page)
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
@@ -124,6 +125,7 @@ namespace blog_web.Areas.Admin.Controllers
             ViewBag.CurrentPage = pageNumber;
             return View(models);
         }
+        [Authorize(Roles = "Admin")]
         // GET: Admin/Accounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -144,12 +146,14 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AccountId,FullName,Email,Phone,Password," +
             "Active,CreatedAt,RoleId,LastLogin")] Account account)
@@ -166,6 +170,7 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -183,6 +188,7 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AccountId,FullName,Email," +
             "Phone,Password,Active,CreatedAt,RoleId,LastLogin")] Account account)
@@ -216,6 +222,7 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -236,6 +243,7 @@ namespace blog_web.Areas.Admin.Controllers
 
         // POST: Admin/Accounts/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -249,11 +257,69 @@ namespace blog_web.Areas.Admin.Controllers
         {
             return _context.Accounts.Any(e => e.AccountId == id);
         }
+
         [AllowAnonymous]
-        [Route("not-found")]
+        [Route("not-found.html")]
         public IActionResult AccessDenied()
         {
             return View("NOTFOUND");
         }
+
+        #region  User
+
+        #region EditProfile
+        [HttpGet]
+        [Route("edit-profile.html")]
+        public async Task<IActionResult> EditProfile()
+        {
+            var id = User.GetSpecificClaim("Account_Id");
+            if (string.IsNullOrEmpty(id)) return View("NOTFOUND");
+            Account account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(id));
+            if (account == null) return View("NOTFOUND");
+            return View(account);
+        }
+
+        [BindProperty]
+        public Account account { get; set; }
+        [HttpPost]
+        [Route("edit-profile.html")]
+        public async Task<IActionResult> EditProfile(Account account)
+        {
+            _context.Update(account);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home", new { Area = "Admin" });
+        }
+        #endregion
+
+
+
+        #region ChangePassWord
+        [Route("/doi-mat-khau.html")]
+        [HttpGet]
+        public IActionResult ChangePassWord()
+        {
+            return View("ChangePassWord");
+        }
+        [HttpPost]
+        [Route("/doi-mat-khau.html")]
+        public async Task<IActionResult> ChangePassWord(ChangePasswordViewModel changePassword)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = User.GetSpecificClaim("Account_Id");
+                if (string.IsNullOrEmpty(id)) return View("NOTFOUND");
+                Account account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(id));
+                if (account == null) return View("NOTFOUND");
+                account.Password = changePassword.ConfirmPassword;
+                _context.Update(account);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            }
+            return View(changePassword);
+        }
+        #endregion
+        #endregion
+
+
     }
 }

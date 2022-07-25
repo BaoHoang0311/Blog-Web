@@ -5,6 +5,23 @@
     ViewData["Title"] = "Quản lý Bài Viết";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group mg-b-10-force">
+            <select class="form-control select2" id="catID" name="catID" asp-items="@ViewBag.DanhMuc">
+                <option label="LỌC THEO DANH MỤC"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <input class="form-control" placeholder="Tìm kiếm bài viết" type="text" id="keyword" name="keyword">
+    </div>
+
+</div>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -14,7 +31,7 @@
         <li class="breadcrumb-item active" aria-current="page">Post</li>
     </ol>
     <h6 class="slim-pagetitle">Post</h6>
-</div>
+</div><!-- slim-pageheader -->
 
 <div class="table-responsive">
     <table class="table table-bordered table-colored table-primary">
@@ -28,7 +45,7 @@
 
             </tr>
         </thead>
-        <tbody>
+        <tbody id="records_table">
             @foreach (var item in Model)
             {
                 string url = $"/{item.Alias}.html";
@@ -73,130 +90,57 @@
 </div>
 
 
+@section Scripts_Admin {
+    <script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
 
+            document.getElementById('keyword').addEventListener('keyup', function (e) {
+                //Run LiveSearch on ever key up 
+                LiveSearch()
+            });
 
+            function LiveSearch() {
+                var strkeyword = $('#keyword').val();
+                $.ajax({
+                    type: "POST",
+                    url: '/Admin/Search/FindBaiViet',
+                    datatype: "json",
+                    data: { keyword: strkeyword },
+                    async: true,
+                    success: function (results) {
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            };
 
+            jQuery("#catID").change(function () {
+                var _catID = $('#catID').val();
+                catid = parseFloat(_catID);
 
+                $.ajax({
+                    url: '/Admin/Posts/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        catID: catid
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+        });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*IEnumerable<blog_web.Models.Post>
-    ViewData["Title"] = "Post";
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
-    <h1>Index</h1>*@
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShortContent)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Contents)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Thumb)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Published)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Alias)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedAt)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Author)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tags)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsHot)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsNewFeed)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Account)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Cat)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShortContent)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Contents)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Thumb)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Published)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Alias)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Author)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tags)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsHot)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsNewFeed)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Account.AccountId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Cat.CatName)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
+    </script>
+}

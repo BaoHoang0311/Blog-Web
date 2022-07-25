@@ -50,9 +50,9 @@ namespace blog_web
                     {
                         config.Cookie.Name = "UserLoginCookie";
                         config.ExpireTimeSpan = TimeSpan.FromDays(30);
-                        config.LoginPath = "/dang-nhap";
-                        config.LogoutPath = "/dang-xuat";
-                        config.AccessDeniedPath = "/not-found";
+                        config.LoginPath = "/dang-nhap.html";
+                        config.LogoutPath = "/dang-xuat.html";
+                        config.AccessDeniedPath = "/not-found.html";
                     });
 
             services.ConfigureApplicationCookie(options =>

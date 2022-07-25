@@ -15,7 +15,7 @@ namespace blog_web.Areas.Admin.Data.ViewModel
         public string EmailAddress { get; set; }
         [Display(Name = "Password của bạn")]
         [Required(ErrorMessage ="vui long nhap mat khau cua bạn")]
-        [StringLength(10,MinimumLength =6)]
+        [StringLength(10,MinimumLength =3)]
         public string Password { get; set; }
     }
 }

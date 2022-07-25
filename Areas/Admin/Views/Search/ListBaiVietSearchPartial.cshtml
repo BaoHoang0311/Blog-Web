@@ -1,0 +1,88 @@
+﻿@model IEnumerable<blog_web.Models.Post>
+
+@if (Model != null)
+{
+    @foreach (var item in Model)
+    {
+        string url = $"/{item.Alias}.html";
+        string url1 = $"Admin/Categories/Details/{item.CatId}";
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.PostId)</td>
+
+            <td><a href="/@url">@item.Title</a> </td>
+
+            <td><a href="/@url1"> @item.Cat.CatName </a></td>
+
+            <td>
+                @if (item.Published == true)
+                {
+                    <span class="badge  badge-primary">Public</span>
+
+                }
+                else
+                {
+                    <span class="badge badge-warning">NON-Public</span>
+                }
+            </td>
+            <td>
+                <a href="/@item.Alias" target="_blank" class="btn btn-warning">View</a> |
+                <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-secondary">Edit</a>|
+                <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-success">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PostId" class="btn btn-danger">Delete</a>
+
+            </td>
+        </tr>
+    }
+}
+
+
+@section Scripts_Admin {
+    <script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("#keyword").keyup(function () {
+                    var strkeyword = $('#keyword').val();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Admin/Search/FindBaiViet',
+                        datatype: "json",
+                        data: { keyword: strkeyword },
+                        async: true,
+                        success: function (results) {
+                            $("#records_table").html("");
+                            $("#records_table").html(results);
+                        },
+                        error: function (xhr) {
+                            alert('error');
+                        }
+                    });
+                });
+            });
+
+            jQuery("#catID").change(function () {
+                var _catID = $('#catID').val();
+                catid = parseFloat(_catID);
+
+                $.ajax({
+                    url: '/Admin/Posts/Filter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        catID: catid
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+        });
+
+    </script>
+}
