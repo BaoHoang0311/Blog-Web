@@ -28,14 +28,15 @@ namespace blog_web.Areas.Admin.Controllers
             save = _save;
         }
         // GET: Admin/Posts
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, int catID = 0)
         {
-            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
+            var ID_user = User.GetSpecificClaim("Account_Id");
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(ID_user));
             if (taikhoan == null) return NotFound();
 
 
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 4;
+            var pageSize = 20;
 
             List<Post> lsPost = new List<Post>();
 
@@ -49,14 +50,54 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 lsPost = _context.Posts.Include(p => p.Account)
                            .Include(p => p.Cat)
-                           .Where(p=>p.AccountId == taikhoan.AccountId)
+                           .Where(p => p.AccountId == taikhoan.AccountId)
                            .OrderByDescending(x => x.PostId).ToList();
-
             }
-            PagedList<Post> models = new PagedList<Post>(lsPost.AsQueryable() , pageNumber, pageSize);
+
+            if (catID != 0)
+            {
+                lsPost = _context.Posts
+                            .AsNoTracking().Where(x => x.CatId == catID)
+                            .Include(x => x.Cat)
+                            .OrderByDescending(x => x.PostId).ToList();
+            }
+            else
+            {
+                lsPost = _context.Posts
+                            .AsNoTracking()
+                            .Include(x => x.Cat)
+                            .OrderByDescending(x => x.PostId).ToList();
+            }
+
+            PagedList<Post> models = new PagedList<Post>(lsPost.AsQueryable(), pageNumber, pageSize);
+
+            var cate = _context.Categories.ToList();
+            List<Category> cate1 = new();
+            cate1.Add(new Category()
+            {
+                CatId = 0,
+                CatName = "ALL"
+            }); ;
+            cate1.AddRange(_context.Categories);
+            ViewBag.DanhMuc = new SelectList(cate1, "CatId", "CatName");
+
+
             return View(models);
         }
-
+        public IActionResult Filter(int catID = 0)
+        {
+            var url = $"/Admin/Posts/Index?catID={catID}";
+            if (catID == 0)
+            {
+                url = $"/Admin/Posts/Index";
+            }
+            else
+            {
+                url = $"/Admin/Posts/Index?catID={catID}";
+            }
+            var zzz = Json(new { status = "success", redirectUrl = url });
+            return zzz;
+        }
         // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -130,7 +171,7 @@ namespace blog_web.Areas.Admin.Controllers
             var post = await _context.Posts.FindAsync(id);
 
             // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
-            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin") 
+            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
                 return RedirectToAction(nameof(Index));
 
             if (post == null)
@@ -168,7 +209,7 @@ namespace blog_web.Areas.Admin.Controllers
                     post.Alias = post.Title.ToUrlFriendly();
 
                     if (fThumb != null) post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
-                   
+
 
                     _context.Update(post);
                     await _context.SaveChangesAsync();
@@ -199,7 +240,7 @@ namespace blog_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()) );
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
             if (taikhoan == null) return NotFound();
 
             Post post = new Post();
@@ -217,7 +258,7 @@ namespace blog_web.Areas.Admin.Controllers
                            .Include(p => p.Cat)
                            .Where(p => p.AccountId == int.Parse(User.GetAccountID()))
                            .FirstOrDefaultAsync(m => m.PostId == id);
-                           
+
             }
             if (post == null) return NotFound();
 
