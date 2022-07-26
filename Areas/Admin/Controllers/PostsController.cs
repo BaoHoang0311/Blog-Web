@@ -10,11 +10,13 @@ using PagedList.Core;
 using blog_web.Extension;
 using Microsoft.AspNetCore.Http;
 using blog_web.Data.Extension;
-//using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace blog_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize()]
     public class PostsController : Controller
     {
         private readonly blogdbContext _context;
@@ -26,14 +28,32 @@ namespace blog_web.Areas.Admin.Controllers
             save = _save;
         }
         // GET: Admin/Posts
-        public IActionResult Index(int? page)
+        public async Task<IActionResult> Index(int? page)
         {
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
+            if (taikhoan == null) return NotFound();
+
+
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 3;
-            var lsPost = _context.Posts.Include(p => p.Account)
-                .Include(p => p.Cat)
-                .OrderByDescending(x => x.PostId);
-            PagedList<Post> models = new PagedList<Post>(lsPost, pageNumber, pageSize);
+            var pageSize = 4;
+
+            List<Post> lsPost = new List<Post>();
+
+            if (User.IsInRole("Admin"))
+            {
+                lsPost = _context.Posts.Include(p => p.Account)
+                    .Include(p => p.Cat)
+                    .OrderByDescending(x => x.PostId).ToList();
+            }
+            else
+            {
+                lsPost = _context.Posts.Include(p => p.Account)
+                           .Include(p => p.Cat)
+                           .Where(p=>p.AccountId == taikhoan.AccountId)
+                           .OrderByDescending(x => x.PostId).ToList();
+
+            }
+            PagedList<Post> models = new PagedList<Post>(lsPost.AsQueryable() , pageNumber, pageSize);
             return View(models);
         }
 
@@ -58,20 +78,15 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Posts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             // phải đăng nhập để đăng bài
-            if (!User.Identity.IsAuthenticated) 
-                RedirectToAction("Login", "Accounts", new { Areas = "Admin"});
-            var taikhoanID = HttpContext.Session.GetString("id_tai_khoan");
-            if(taikhoanID ==null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
+            if (taikhoan == null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
+
             ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
-
-        // POST: Admin/Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
@@ -81,22 +96,19 @@ namespace blog_web.Areas.Admin.Controllers
             , IFormFile fThumb)
         {
             // phải đăng nhập để đăng bài
-            if (!User.Identity.IsAuthenticated) RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
-            var id = HttpContext.Session.GetString("id_tai_khoan");
-            if (id == null) return RedirectToAction("Login", "Accounts", new { Areas = "Admin" });
-            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(id));
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
             if (taikhoan == null) return NotFound();
 
             if (ModelState.IsValid)
             {
+                post.AccountId = int.Parse(User.GetAccountID());
+                post.Author = User.FindFirstValue(ClaimTypes.Name);
                 post.Alias = post.Title.ToUrlFriendly();
                 post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
-                post.AccountId = int.Parse(id);
-                post.Author = taikhoan.FullName;
                 if (post.CreatedAt == null) post.CreatedAt = DateTime.Now;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-      
+
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
@@ -111,7 +123,16 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
+            if (taikhoan == null) return NotFound();
+
             var post = await _context.Posts.FindAsync(id);
+
+            // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
+            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin") 
+                return RedirectToAction(nameof(Index));
+
             if (post == null)
             {
                 return NotFound();
@@ -121,27 +142,37 @@ namespace blog_web.Areas.Admin.Controllers
             return View(post);
         }
 
-        // POST: Admin/Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,ShortContent,Contents,Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,ShortContent,Contents," +
+            "Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
         Post post, IFormFile fThumb)
         {
             if (id != post.PostId)
             {
                 return NotFound();
             }
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
+            if (taikhoan == null) return NotFound();
+
+            // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
+            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
+                return RedirectToAction(nameof(Index));
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    post.AccountId = int.Parse(User.GetAccountID());
+                    post.Author = User.FindFirstValue(ClaimTypes.Name);
+                    post.Alias = post.Title.ToUrlFriendly();
+
+                    if (fThumb != null) post.Thumb = await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
+                   
+
                     _context.Update(post);
-                    if(fThumb!=null)
-                        await save.UploadImage(@"images/Post/Thumb/", fThumb, post.Title);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -154,10 +185,7 @@ namespace blog_web.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            //ViewData["AccountId"] = new SelectList(_context.Accounts, "AccountId", "AccountId", post.AccountId);
-            //ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
             ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
             return View(post);
@@ -171,15 +199,29 @@ namespace blog_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .Include(p => p.Account)
-                .Include(p => p.Cat)
-                .FirstOrDefaultAsync(m => m.PostId == id);
-            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
-            if (post == null)
+            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()) );
+            if (taikhoan == null) return NotFound();
+
+            Post post = new Post();
+            if (User.IsInRole("Admin"))
             {
-                return NotFound();
+                post = await _context.Posts
+                                .Include(p => p.Account)
+                                .Include(p => p.Cat)
+                                .FirstOrDefaultAsync(m => m.PostId == id);
             }
+            else // ko phải admin đòi xóa
+            {
+                post = await _context.Posts
+                            .Include(p => p.Account)
+                           .Include(p => p.Cat)
+                           .Where(p => p.AccountId == int.Parse(User.GetAccountID()))
+                           .FirstOrDefaultAsync(m => m.PostId == id);
+                           
+            }
+            if (post == null) return NotFound();
+
+            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
 
             return View(post);
         }

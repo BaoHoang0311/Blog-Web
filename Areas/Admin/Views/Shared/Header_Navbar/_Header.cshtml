@@ -1,0 +1,43 @@
+﻿<div class="slim-header">
+    <div class="container">
+        <div class="slim-header-left">
+            <h2 class="slim-logo"><a href="/Admin/">Admin<span>.</span></a></h2>
+
+            <div class="search-box">
+                <input type="text" class="form-control" placeholder="Search">
+                <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div><!-- search-box -->
+        </div><!-- slim-header-left -->
+        <div class="slim-header-right">
+            <div class="dropdown dropdown-c">
+                @if (!User.Identity.IsAuthenticated)
+                {
+
+                    @*Login*@
+                    <a class="btn btn-outline-warning mr-2s" asp-area="Admin"
+                       asp-controller="Accounts" asp-action="LogIn">
+                        <i class="bi bi-box-arrow-in-right mr-2">
+                            LogIn
+                        </i>
+                    </a>
+                }
+                else
+                {
+                <a href="#" class="logged-user" data-toggle="dropdown">
+                    <img src="~/AdminAssets/img/img18.jpg" alt="">
+                    <span>@User.Identity.Name</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <nav class="nav">
+                        <a href="page-profile.html" class="nav-link"><i class="icon ion-person"></i> View Profile</a>
+                        <a href="page-edit-profile.html" class="nav-link"><i class="icon ion-compose"></i> Edit Profile</a>
+                        <a href="page-settings.html" class="nav-link"><i class="icon ion-ios-gear"></i>ChangePassword</a>
+                        <a href="/dang-xuat" class="nav-link"><i class="icon ion-forward"></i> Sign Out</a>
+                    </nav>
+                </div><!-- dropdown-menu -->
+                }
+            </div><!-- dropdown -->
+        </div><!-- header-right -->
+    </div><!-- container -->
+</div><!-- slim-header -->

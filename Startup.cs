@@ -35,8 +35,6 @@ namespace blog_web
             services.AddDbContext<blogdbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaulConnectionString")));
 
- 
-
             services.AddSession();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -51,26 +49,23 @@ namespace blog_web
                     .AddCookie("CookieAuthentication_zz", config =>
                     {
                         config.Cookie.Name = "UserLoginCookie";
-                        config.ExpireTimeSpan = TimeSpan.FromDays(1);
-                        //config.LoginPath = "/dang-nhap.html";
-                        //config.LogoutPath = "/dang-xuat.html";
-                        //config.AccessDeniedPath = "/not-found.html";
+                        config.ExpireTimeSpan = TimeSpan.FromDays(30);
+                        config.LoginPath = "/dang-nhap";
+                        config.LogoutPath = "/dang-xuat";
+                        config.AccessDeniedPath = "/not-found";
                     });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings,only this changes expiration
+                options.Cookie.HttpOnly = true;
+                options.Cookie.Expiration = TimeSpan.FromMinutes(30);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            });
 
             #region Chưa biết
 
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            //services.AddAuthentication("CookieAuthentication")
-            //        .AddCookie("CookieAuthentication", config =>
-            //        {
-            //            config.Cookie.Name = "UserLoginCookie";
-            //            config.ExpireTimeSpan = TimeSpan.FromDays(1);
-            //            config.LoginPath = "/dang-nhap.html";
-            //            config.LogoutPath = "/dang-xuat.html";
-            //            config.AccessDeniedPath = "/not-found.html";
-            //        });
 
             //services.ConfigureApplicationCookie(options =>
             //{
