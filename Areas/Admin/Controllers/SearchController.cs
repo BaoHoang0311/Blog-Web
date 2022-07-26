@@ -19,9 +19,10 @@ namespace blog_web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult FindBaiViet(string keyword)
         {
+            var ls = new List<Post>();
             if (keyword != null)
             {
-                var ls = _context.Posts
+                 ls = _context.Posts
                             .Include(x => x.Cat)
                             .AsNoTracking()
                             .Where(x => x.Title.Contains(keyword) || x.Contents.Contains(keyword))
@@ -31,7 +32,12 @@ namespace blog_web.Areas.Admin.Controllers
             }
             else
             {
-                return PartialView("ListBaiVietSearchPartial", null);
+                 ls = _context.Posts
+                            .Include(x => x.Cat)
+                            .AsNoTracking()
+                            .OrderByDescending(x => x.CreatedAt)
+                            .ToList();
+                return PartialView("ListBaiVietSearchPartial", ls);
             }
         }
     }
