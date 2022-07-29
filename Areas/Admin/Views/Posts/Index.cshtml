@@ -106,7 +106,9 @@
                     type: "POST",
                     url: '/Admin/Search/FindBaiViet',
                     datatype: "json",
-                    data: { keyword: strkeyword },
+                    data: {
+                        keyword: strkeyword
+                    },
                     async: true,
                     success: function (results) {
                         $("#records_table").html("");
@@ -123,9 +125,9 @@
                 catid = parseFloat(_catID);
 
                 $.ajax({
+                    type: "GET",
                     url: '/Admin/Posts/Filter',
                     datatype: "json",
-                    type: "GET",
                     data: {
                         catID: catid
                     },

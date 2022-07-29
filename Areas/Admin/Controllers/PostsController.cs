@@ -27,6 +27,20 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
             save = _save;
         }
+        public IActionResult Filter(int catID = 0)
+        {
+            var url = $"/Admin/Posts/Index?catID={catID}";
+            if (catID == 0)
+            {
+                url = $"/Admin/Posts/Index";
+            }
+            else
+            {
+                url = $"/Admin/Posts/Index?catID={catID}";
+            }
+            var zzz = Json(new { status = "success", redirectUrl = url });
+            return zzz;
+        }
         // GET: Admin/Posts
         public async Task<IActionResult> Index(int? page, int catID = 0)
         {
@@ -84,20 +98,7 @@ namespace blog_web.Areas.Admin.Controllers
 
             return View(models);
         }
-        public IActionResult Filter(int catID = 0)
-        {
-            var url = $"/Admin/Posts/Index?catID={catID}";
-            if (catID == 0)
-            {
-                url = $"/Admin/Posts/Index";
-            }
-            else
-            {
-                url = $"/Admin/Posts/Index?catID={catID}";
-            }
-            var zzz = Json(new { status = "success", redirectUrl = url });
-            return zzz;
-        }
+
         // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {

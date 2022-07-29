@@ -2,25 +2,9 @@
     <div class="container">
         <div class="slim-header-left">
             <h2 class="slim-logo"><a href="/Admin/">Admin<span>.</span></a></h2>
-
-            <div class="search-box">
-                <input type="text" class="form-control" placeholder="Search">
-                <button class="btn btn-primary"><i class="fa fa-search"></i></button>
-            </div><!-- search-box -->
         </div><!-- slim-header-left -->
         <div class="slim-header-right">
             <div class="dropdown dropdown-c">
-                @*if (!User.Identity.IsAuthenticated)
-                {
-                    <a class="btn btn-outline-warning mr-2s" asp-area="Admin"
-                       asp-controller="Accounts" asp-action="LogIn">
-                        <i class="bi bi-box-arrow-in-right mr-2">
-                            LogIn
-                        </i>
-                    </a>
-                }
-                else
-                {*@
                 <a href="#" class="logged-user" data-toggle="dropdown">
                     <img src="~/AdminAssets/img/img18.jpg" alt="">
                     <span>@User.Identity.Name</span>
@@ -34,7 +18,6 @@
                         <a href="/dang-xuat.html" class="nav-link"><i class="icon ion-forward"></i> Sign Out</a>
                     </nav>
                 </div><!-- dropdown-menu -->
-                @*}*@
             </div><!-- dropdown -->
         </div><!-- header-right -->
     </div><!-- container -->
