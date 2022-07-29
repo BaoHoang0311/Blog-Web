@@ -1,0 +1,206 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<blog_web.Models.Post>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-header">
+    <div class="container-xl">
+        <div class="text-center">
+            <h1 class="mt-0 mb-2">@ViewBag.danhmuc</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</section>
+
+
+<section class="main-content">
+    <div class="container-xl">
+
+        <div class="row gy-4">
+
+            <div class="col-lg-8">
+
+                <div class="row gy-4">
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            string url = item.Alias + ".html";
+                            <div class="col-sm-6">
+                                <!-- post -->
+                                <div class="post post-grid rounded bordered" style="height:100%">
+                                    <div class="thumb top-rounded">
+                                        <a href="/@item.Cat.Alias" class="category-badge position-absolute">@item.Cat.CatName</a>
+                                        <img class="post-format" src="@item.Cat.Cover" style="border-radius: 50%;">
+                                        <a href="blog-single.html">
+                                            <div class="inner">
+                                                <img src="@item.Thumb" alt="post-title">
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="details">
+                                        <ul class="meta list-inline mb-0">
+                                            <li class="list-inline-item"><a href="#"><img src="~/UserAssets/images/other/author-sm.png" class="author" alt="author">@item.Author</a></li>
+                                            <li class="list-inline-item">@item.CreatedAt.Value.ToString("yyyy-MM-dd")</li>
+                                        </ul>
+                                        <h5 class="post-title mb-3 mt-3"><a href="/@url">@item.Title</a></h5>
+                                        <p class="excerpt mb-0">@item.ShortContent</p>
+                                    </div>
+                                    <div class="post-bottom clearfix d-flex align-items-center">
+                                        <div class="social-share me-auto">
+                                            <button class="toggle-button icon-share"></button>
+                                            <ul class="icons list-unstyled list-inline mb-0">
+                                                @await Component.InvokeAsync("SocialView")
+                                            </ul>
+                                        </div>
+                                        <div class="more-button float-end">
+                                            <a href="blog-single.html"><span class="icon-options"></span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div>
+                    <pager class="pagination justify-content-center" list="@Model"
+                           options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext"
+                           asp-action="List"
+                           asp-controller="Posts"
+                           asp-route-page="@ViewBag.CurrentPage" />
+
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- sidebar -->
+                <partial name="_RightPartialView" />
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShortContent)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Contents)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Thumb)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Published)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Alias)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedAt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsHot)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsNewFeed)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Account)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cat)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShortContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contents)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Thumb)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Published)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alias)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsHot)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsNewFeed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Account.AccountId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cat.CatName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@

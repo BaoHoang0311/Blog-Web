@@ -33,7 +33,11 @@ namespace blog_web.Areas.Admin.Controllers
         [Route("dang-nhap.html")]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            }
+
             return View("LogIn");
         }
         [HttpPost]

@@ -1,5 +1,7 @@
-﻿using blog_web.Models;
+﻿using blog_web.Data.ViewModel;
+using blog_web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,33 @@ namespace blog_web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly blogdbContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, blogdbContext context)
         {
             _logger = logger;
+            _context = context;
         }
-
-        public IActionResult Index()
+       
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var list = await _context.Posts
+                                .Include(m=>m.Cat)
+                                .Include(m=>m.Account)
+                                .Where(x => x.Published == true)
+                                .OrderByDescending(x => x.CreatedAt)
+                                .ToListAsync();
+            HomePageVM homepage = new HomePageVM()
+            {
+                Inspiration = list,
+                Populars = list.Where(x=>x.IsHot == true).ToList(),
+                Trendings = list.Where(x => x.IsHot == true).ToList(),
+                LatestPosts = list,
+                Recents = list,
+                post =list.FirstOrDefault(),
+            };
+            return View(homepage);
         }
 
         public IActionResult Privacy()

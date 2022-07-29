@@ -1,0 +1,12 @@
+﻿@model blog_web.Models.Category[]
+
+
+
+
+<ul class="submenu">
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <li><a href="/@Model[i].Alias">@Model[i].CatName</a></li>
+    }
+</ul>
+

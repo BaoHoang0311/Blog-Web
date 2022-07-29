@@ -21,12 +21,12 @@ namespace blog_web.Areas.Admin.Controllers
     public class CategoriesController : Controller
     {
         private readonly blogdbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly Saveimage _saveimage;
 
-        public CategoriesController(blogdbContext context, IWebHostEnvironment webHostEnvironment)
+        public CategoriesController(blogdbContext context, Saveimage saveimage)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
+            _saveimage = saveimage;
         }
 
         // GET: Admin/Categories
@@ -53,7 +53,7 @@ namespace blog_web.Areas.Admin.Controllers
                 .FirstOrDefaultAsync(m => m.CatId == id);
             if (category == null)
             {
-                return NotFound();
+                return View("NOTFOUND");
             }
 
             return View(category);
@@ -82,9 +82,9 @@ namespace blog_web.Areas.Admin.Controllers
                     if (category.Parent == null) category.Levels = 1;
                     else category.Levels = category.Parent == 0 ? 1 : 2;
 
-                    if (fThumb != null) category.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
-                    if (fIcon != null) category.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
-                    if (fCover != null) category.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
+                    if (fThumb != null) category.Thumb = await _saveimage.UploadImage(@"images/categories/", fThumb, category.CatName);
+                    if (fIcon != null) category.Icon = await _saveimage.UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
+                    if (fCover != null) category.Cover = await _saveimage.UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
 
                     _context.Add(category);
                     await _context.SaveChangesAsync();
@@ -94,32 +94,19 @@ namespace blog_web.Areas.Admin.Controllers
             }
             return View(category);
         }
-        // tạo đường dẫn lưu vào wwwroot
-        private async Task<string> UploadImage(string folderPath, IFormFile file, string fileName)
-        {
-            string extension = Path.GetExtension(file.FileName);
-
-            folderPath += Utilities.SEOUrl(fileName) + "_preview_" +Guid.NewGuid() + extension;
-
-            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
-
-            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-
-            return "/" + folderPath;
-        }
         // GET: Admin/Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
 
             if (id == null)
             {
-                return NotFound();
+                return View("NOTFOUND");
             }
             ViewBag.Parent = new SelectList(_context.Categories.Where(x => x.Levels == 1), "CatId", "CatName");
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
-                return NotFound();
+                return View("NOTFOUND");
             }
             return View(category);
         }
@@ -149,9 +136,9 @@ namespace blog_web.Areas.Admin.Controllers
                     rs.Parent = category.Parent;
                     rs.Levels = category.Parent == 0 ? 1 : 2;
 
-                    if (fThumb != null) rs.Thumb = await UploadImage(@"images/categories/", fThumb, category.CatName);
-                    if (fIcon != null) rs.Icon = await UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
-                    if (fCover != null) rs.Cover = await UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
+                    if (fThumb != null) rs.Thumb = await _saveimage.UploadImage(@"images/categories/", fThumb, category.CatName);
+                    if (fIcon != null) rs.Icon = await _saveimage.UploadImage(@"images/categories/", fIcon, category.CatName + "icon_");
+                    if (fCover != null) rs.Cover = await _saveimage.UploadImage(@"images/categories/", fCover, category.CatName + "cover_");
 
                     _context.Update(rs);
                     await _context.SaveChangesAsync();
@@ -160,7 +147,7 @@ namespace blog_web.Areas.Admin.Controllers
                 {
                     if (!CategoryExists(category.CatId))
                     {
-                        return View("Not Found");
+                        return View("NOTFOUND");
                     }
                     else
                     {

@@ -1,0 +1,62 @@
+﻿
+@model blog_web.Models.Post
+<!-- section main content -->
+<section class="main-content mt-3">
+    <div class="container-xl">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+                <li class="breadcrumb-item"><a href="/@Model.Cat.Alias">@Model.Cat.CatName</a></li>
+            </ol>
+        </nav>
+
+        <div class="row gy-4">
+
+            <div class="col-lg-8">
+                <!-- post single -->
+                <div class="post post-single">
+                    <!-- post header -->
+                    <div class="post-header">
+                        <h1 class="title mt-0 mb-3">@Model.Title</h1>
+                        <ul class="meta list-inline mb-0">
+                            <li class="list-inline-item"><a href="#"><img src="~/UserAssets/images/other/author-sm.png" class="author" alt="author" />@Model.Account.FullName</a></li>
+                            <li class="list-inline-item">@Model.CreatedAt.Value.ToString("yyyy-MM-dd")</li>
+                        </ul>
+                    </div>
+                    <!-- featured image -->
+                    <div class="featured-image">
+                        <img src="@Model.Thumb" alt="post-title" />
+                    </div>
+                    <!-- post content -->
+                    <div class="post-content clearfix">
+                       @Html.Raw(@Model.Contents)
+
+                    </div>
+                    <!-- post bottom section -->
+
+                </div>
+
+                <div class="spacer" data-height="50"></div>
+
+
+                <div class="spacer" data-height="50"></div>
+
+                <!-- section header -->
+                <!-- post comments -->
+
+                <div class="spacer" data-height="50"></div>
+
+                <!-- section header -->
+                <!-- comment form -->
+            </div>
+
+            <div class="col-lg-4">
+                <!-- sidebar -->
+                <partial name="_RightPartialView" />
+            </div>
+
+        </div>
+
+    </div>
+</section>

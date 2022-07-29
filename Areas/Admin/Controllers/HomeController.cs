@@ -11,6 +11,7 @@ namespace blog_web.Areas.Admin.Controllers
     [Authorize()]
     public class HomeController : Controller
     {
+        [Route("Admin")]
         public IActionResult Index()
         {
             return View();
