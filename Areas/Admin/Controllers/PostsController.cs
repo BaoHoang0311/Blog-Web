@@ -202,7 +202,8 @@ namespace blog_web.Areas.Admin.Controllers
             }
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
             if (taikhoan == null) return NotFound();
-
+            
+            post.AccountId = int.Parse(User.GetAccountID());
             // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
             if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
                 return RedirectToAction(nameof(Index));
@@ -211,7 +212,6 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 try
                 {
-                    post.AccountId = int.Parse(User.GetAccountID());
                     post.Author = User.FindFirstValue(ClaimTypes.Name);
                     post.Alias = post.Title.ToUrlFriendly();
 

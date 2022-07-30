@@ -115,7 +115,6 @@ namespace blog_web.Areas.Admin.Controllers
         public Category category { get; set; }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
         public async Task<IActionResult> Edit(int id, /*[Bind("CatId,CatName,Title,Alias,MetaDesc,MetaKey,Thumb,Published,Ordering,Parent,Levels,Icon,Cover,Description")]*/
         Category category, IFormFile fIcon, IFormFile fCover, IFormFile fThumb)
         {

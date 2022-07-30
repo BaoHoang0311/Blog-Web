@@ -28,7 +28,7 @@ namespace blog_web.Controllers
             return View(await blogdbContext.ToListAsync());
         }
         //Get : list- danhmuc
-        [Route("/{Alias}", Name = "List")]
+        [Route("/{Alias}")]
         public async Task<IActionResult> List(string Alias, int? page)
         {
             if (string.IsNullOrEmpty(Alias)) return RedirectToAction("Index", "Home");
@@ -45,9 +45,10 @@ namespace blog_web.Controllers
             ViewBag.Danhmuc = danhmuc.CatName;
             return View(posts);
         }
-        [Route("/{Alias}.html", Name = "PostsDetails")]  // post
+        [Route("/{Alias}.html")]  // post
         public async Task<IActionResult> Details(string Alias)
         {
+            if (Alias == "dang-nhap") return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
             if (string.IsNullOrEmpty(Alias))
             {
                 return NotFound();
@@ -59,25 +60,10 @@ namespace blog_web.Controllers
 
             if (post == null)
             {
-                return View("NOTFOUND");
+                return NotFound();
             }
             return View(post);
         }
-        // GET: Posts/Details/5
-        // tin
-
-        //public async Task<IActionResult> Details()
-        //{
-        //    var post = await _context.Posts
-        //                .Include(p => p.Account)
-        //                .Include(p => p.Cat)
-        //                .FirstAsync();
-        //    if (post == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(post);
-        //}
         private bool PostExists(int id)
         {
             return _context.Posts.Any(e => e.PostId == id);

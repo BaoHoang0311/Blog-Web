@@ -80,7 +80,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Contact</a>
+                                <a class="nav-link" href="/Home/Contact">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -94,12 +94,31 @@
                             <button class="search icon-button">
                                 <i class="icon-magnifier"></i>
                             </button>
-                            <a class="icon-button"
-                               asp-area="Admin"
-                               asp-controller="Accounts"
-                               asp-action="Login">
-                                <span class="icon-login"></span>
-                            </a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+
+                                <a class="icon-button"
+                                   asp-area="Admin"
+                                   asp-controller="Accounts"
+                                   asp-action="Logout">
+                                    <span class="icon-logout"></span>
+                                </a> 
+
+                                <a class="icon-button"
+                                   asp-area="Admin"
+                                   asp-controller="Home"
+                                   asp-action="Index">
+                                    <span class="icon-settings"></span>
+                                </a>
+                             }
+                            else
+                            {
+                                <a class="icon-button"
+                                   href="/dang-nhap.html">
+                                    <span class="icon-login"></span>
+                                </a>
+                            }
+
                             <button class="burger-menu icon-button">
                                 <span class="burger-icon"></span>
                             </button>
