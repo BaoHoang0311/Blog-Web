@@ -48,14 +48,14 @@
         <tbody id="records_table">
             @foreach (var item in Model)
             {
-                string url = $"/{item.Alias}.html";
-                string url1 = $"Admin/Categories/Details/{item.CatId}";
+                string url = $"{item.Alias}.html";
+                string url1 = $"{item.Cat.Alias}";
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.PostId)</td>
 
-                    <td><a href="/@url">@item.Title</a> </td>
+                    <td><a href="/@url">@item.Title</a></td>
 
-                    <td><a href="/@url1"> @item.Cat.CatName </a></td>
+                    <td><a href="/@url1"> @item.Cat.CatName</a></td>
 
                     <td>
                         @if (item.Published == true)
@@ -69,7 +69,7 @@
                         }
                     </td>
                     <td>
-                        <a href="/@item.Alias" target="_blank" class="btn btn-warning">View</a> |
+                        <a href="/@url" target="_blank" class="btn btn-warning">View</a> |
                         <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-secondary">Edit</a>|
                         <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-success">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.PostId" class="btn btn-danger">Delete</a>

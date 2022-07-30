@@ -26,19 +26,21 @@ namespace blog_web.Areas.Admin.Controllers
         {
             _context = context;
         }
-
+        #region Login
         // GET: Admin/Login
-        [HttpGet]
         [AllowAnonymous]
-        [Route("dang-nhap.html")]
+        [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+            }
             return View("LogIn");
         }
-        [HttpPost]
+
         [AllowAnonymous]
-        [Route("dang-nhap.html")]
+        [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             try
@@ -91,25 +93,29 @@ namespace blog_web.Areas.Admin.Controllers
             catch
             {
                 return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
+
             }
             return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
         }
 
-        [Route("dang-xuat.html")]
+        #endregion
+
+        [Route("/dang-xuat.html")]
         public async Task<IActionResult> Logout()
         {
             try
             {
                 await HttpContext.SignOutAsync("CookieAuthentication_zz");
                 HttpContext.Session.Remove("id_tai_khoan");
-                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+                //return RedirectToAction("Index", "Home", new { Area = "" }) ;
+                return RedirectToAction("Index", "Home", new { Area = "Admin" }) ;
             }
             catch
             {
+                //return RedirectToAction("Index", "Home", new { Area = "" });
                 return RedirectToAction("Index", "Home", new { Area = "Admin" });
             }
         }
-
         // GET: Admin/Accounts
         [Authorize(Roles = "Admin")]
         public IActionResult Index(int? page)
@@ -269,7 +275,7 @@ namespace blog_web.Areas.Admin.Controllers
 
         #region EditProfile
         [HttpGet]
-        [Route("edit-profile.html")]
+        [Route("/edit-profile.html")]
         public async Task<IActionResult> EditProfile()
         {
             var id = User.GetSpecificClaim("Account_Id");
@@ -282,7 +288,7 @@ namespace blog_web.Areas.Admin.Controllers
         [BindProperty]
         public Account account { get; set; }
         [HttpPost]
-        [Route("edit-profile.html")]
+        [Route("/edit-profile.html")]
         public async Task<IActionResult> EditProfile(Account account)
         {
             _context.Update(account);
@@ -290,8 +296,6 @@ namespace blog_web.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home", new { Area = "Admin" });
         }
         #endregion
-
-
 
         #region ChangePassWord
         [Route("/doi-mat-khau.html")]
@@ -319,7 +323,5 @@ namespace blog_web.Areas.Admin.Controllers
         }
         #endregion
         #endregion
-
-
     }
 }

@@ -1,5 +1,8 @@
-﻿using blog_web.Models;
+﻿using blog_web.Data.ViewModel;
+using blog_web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,23 +14,51 @@ namespace blog_web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly blogdbContext _context;
+        private readonly IConfiguration config;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, 
+            blogdbContext context
+            ,IConfiguration _config)
         {
             _logger = logger;
+            _context = context;
+            config = _config;
         }
-
-        public IActionResult Index()
+       
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var list = await _context.Posts
+                                .Include(m=>m.Cat)
+                                .Include(m=>m.Account)
+                                .Where(x => x.Published == true)
+                                .OrderByDescending(x => x.CreatedAt)
+                                .ToListAsync();
+            HomePageVM homepage = new HomePageVM()
+            {
+                Inspiration = list,
+                Populars = list.Where(x=>x.IsHot == true).ToList(),
+                Trendings = list.Where(x => x.IsHot == true).ToList(),
+                LatestPosts = list,
+                Recents = list,
+                post =list.FirstOrDefault(),
+            };
+            return View(homepage);
         }
-
-        public IActionResult Privacy()
+        public IActionResult Contact()
         {
-            return View();
+            var contact = getContact();
+            return View(contact);
         }
-
+        public ContactVM getContact()
+        {
+            ContactVM contact  = new ContactVM();
+            contact.Email= config.GetValue<string>("Cotact:sdt");
+            contact.Phone = config.GetValue<string>("Contact:Email");
+            contact.Location = config.GetValue<string>("Contact:Diachi");
+            return contact;
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

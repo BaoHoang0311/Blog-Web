@@ -95,7 +95,6 @@ namespace blog_web.Areas.Admin.Controllers
             cate1.AddRange(_context.Categories);
             ViewBag.DanhMuc = new SelectList(cate1, "CatId", "CatName");
 
-
             return View(models);
         }
 
@@ -161,27 +160,34 @@ namespace blog_web.Areas.Admin.Controllers
         // GET: Admin/Posts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
+                if (taikhoan == null) return NotFound();
+
+                var post = await _context.Posts.FindAsync(id);
+
+                // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
+                if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
+                    return RedirectToAction(nameof(Index));
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+                ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
+                ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
+                return View(post);
             }
-
-            var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
-            if (taikhoan == null) return NotFound();
-
-            var post = await _context.Posts.FindAsync(id);
-
-            // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
-            if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
-                return RedirectToAction(nameof(Index));
-
-            if (post == null)
+            catch
             {
-                return NotFound();
+                return View("NOTFOUND");
             }
-            ViewBag.Acount = new SelectList(_context.Accounts, "AccountId", "FullName", post.AccountId);
-            ViewBag.Categories = new SelectList(_context.Categories, "CatId", "CatName", post.CatId);
-            return View(post);
         }
 
         [HttpPost]
@@ -196,7 +202,8 @@ namespace blog_web.Areas.Admin.Controllers
             }
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
             if (taikhoan == null) return NotFound();
-
+            
+            post.AccountId = int.Parse(User.GetAccountID());
             // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
             if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
                 return RedirectToAction(nameof(Index));
@@ -205,7 +212,6 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 try
                 {
-                    post.AccountId = int.Parse(User.GetAccountID());
                     post.Author = User.FindFirstValue(ClaimTypes.Name);
                     post.Alias = post.Title.ToUrlFriendly();
 
