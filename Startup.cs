@@ -63,18 +63,6 @@ namespace blog_web
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
             });
 
-            #region Chưa biết
-
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    // Cookie settings,only this changes expiration
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.Expiration = TimeSpan.FromDays(150);
-            //    options.ExpireTimeSpan = TimeSpan.FromDays(150);
-            //});
-            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
