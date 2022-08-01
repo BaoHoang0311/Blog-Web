@@ -5,60 +5,61 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<div class="main-content">
+    <div class="slim-pageheader">
+        <ol class="breadcrumb slim-breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+        <h6 class="slim-pagetitle">Edit Profile</h6>
+    </div>
 
-<div class="slim-pageheader">
-    <ol class="breadcrumb slim-breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Edit</li>
-    </ol>
-    <h6 class="slim-pagetitle">Edit Profile</h6>
-</div>
+    <div class="section-wrapper">
+        <form method="post">
+            <label class="section-title">Edit Roles</label>
+            <div class="form-layout form-layout-5">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div class="section-wrapper">
-    <form method="post">
-        <label class="section-title">Edit Roles</label>
-        <div class="form-layout form-layout-5">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="AccountId" />
+                <input type="hidden" asp-for="Password" />
+                <input type="hidden" asp-for="Active" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <input type="hidden" asp-for="RoleId" />
 
-            <input type="hidden" asp-for="AccountId" />
-            <input type="hidden" asp-for="Password" />
-            <input type="hidden" asp-for="Active" />
-            <input type="hidden" asp-for="CreatedAt" />
-            <input type="hidden" asp-for="RoleId" />
+                <div class="row">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Full Name:</label>
+                    <div class="col-sm-4 mg-t-10 mg-sm-t-0">
+                        <input asp-for="FullName" type="text" class="form-control" placeholder="Full Name">
+                        <span asp-validation-for="FullName" class="text-danger"></span>
 
-            <div class="row">
-                <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Full Name:</label>
-                <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                    <input asp-for="FullName" type="text" class="form-control" placeholder="Full Name">
-                    <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                </div><!-- row -->
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Email:</label>
+                    <div class="col-sm-4 mg-t-10 mg-sm-t-0">
+                        <input asp-for="Email" type="text" class="form-control" placeholder="Email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
 
+                    </div>
                 </div>
-            </div><!-- row -->
-            <div class="row mg-t-20">
-                <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Email:</label>
-                <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                    <input asp-for="Email" type="text" class="form-control" placeholder="Email">
-                    <span asp-validation-for="Email" class="text-danger"></span>
 
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Phone:</label>
+                    <div class="col-sm-4 mg-t-10 mg-sm-t-0">
+                        <input asp-for="Phone" type="text" class="form-control" placeholder="Email">
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+
+                    </div>
                 </div>
-            </div>
-
-            <div class="row mg-t-20">
-                <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Phone:</label>
-                <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                    <input asp-for="Phone" type="text" class="form-control" placeholder="Email">
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-
+                <div class="row mg-t-30">
+                    <div class="col-sm-8 mg-l-auto">
+                        <div class="form-layout-footer">
+                            <button asp-area="Admin" asp-controller="Accounts" asp-action="EditProfile" type="submit" class="btn btn-primary bd-0">Edit</button>
+                            <button asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-secondary bd-0">Cancel</button>
+                        </div><!-- form-layout-footer -->
+                    </div><!-- col-8 -->
                 </div>
-            </div>
-            <div class="row mg-t-30">
-                <div class="col-sm-8 mg-l-auto">
-                    <div class="form-layout-footer">
-                        <button asp-area="Admin" asp-controller="Accounts" asp-action="EditProfile" type="submit" class="btn btn-primary bd-0">Edit</button>
-                        <button asp-area="Admin" asp-controller="Home" asp-action="Index"class="btn btn-secondary bd-0">Cancel</button>
-                    </div><!-- form-layout-footer -->
-                </div><!-- col-8 -->
-            </div>
-        </div><!-- form-layout -->
-    </form>
+            </div><!-- form-layout -->
+        </form>
+    </div>
 </div>

@@ -66,7 +66,7 @@ namespace blog_web.Areas.Admin.Controllers
                     kh.LastLogin = DateTime.Now;
                     _context.Update(kh);
                     await _context.SaveChangesAsync();
-
+                    
                     //Identity
                     // Lưu session MaKH
                     HttpContext.Session.SetString("id_tai_khoan", kh.AccountId.ToString());
