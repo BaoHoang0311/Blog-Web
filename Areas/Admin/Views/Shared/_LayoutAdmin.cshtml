@@ -1,71 +1,114 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Twitter -->
-    <meta name="twitter:site" content="@@themepixels">
-    <meta name="twitter:creator" content="@@themepixels">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Slim">
-    <meta name="twitter:description" content="Premium Quality and Responsive UI for Dashboard.">
-    <meta name="twitter:image" content="http://themepixels.me/slim/img/slim-social.png">
-
-    <!-- Facebook -->
-    <meta property="og:url" content="http://themepixels.me/slim">
-    <meta property="og:title" content="Slim">
-    <meta property="og:description" content="Premium Quality and Responsive UI for Dashboard.">
-
-    <meta property="og:image" content="http://themepixels.me/slim/img/slim-social.png">
-    <meta property="og:image:secure_url" content="http://themepixels.me/slim/img/slim-social.png">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="600">
-
-    <!-- Meta -->
-    <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
-    <meta name="author" content="ThemePixels">
-
     <title>@ViewData["Title"]-blog web</title>
 
-    <!-- vendor css -->
-    <link href="~/AdminAssets/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="~/AdminAssets/lib/Ionicons/css/ionicons.css" rel="stylesheet">
-    <link href="~/AdminAssets/lib/chartist/css/chartist.css" rel="stylesheet">
-    <link href="~/AdminAssets/lib/rickshaw/css/rickshaw.min.css" rel="stylesheet">
-    <!-- Slim CSS -->
-    <link rel="stylesheet" href="~/AdminAssets/css/slim.css">
-    <link href="~/AdminAssets/css/slim.css" rel="stylesheet" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/Enlink/assets/images/logo/favicon.png">
+    <link rel="shortcut icon" href="~">
+    <!-- page css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     @await RenderSectionAsync("Styles", required: false)
+    <!-- Core css -->
+    <link href="~/Enlink/assets/css/app.min.css" rel="stylesheet" />
 </head>
 
 <body>
-    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Header_Navbar/_Header.cshtml")<!-- slim-header -->
+    <div class="app">
+        <div class="layout">
+            <!-- Header START -->
+            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Header_Navbar/_Header.cshtml")
+            <!-- Header END -->
+            <!-- Side Nav START -->
+            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Header_Navbar/_Navbar.cshtml")
+            <!-- Side Nav END -->
+            <!-- Page Container START -->
+            <div class="page-container">
+                @RenderBody()
+            </div>
+            <!-- Page Container END -->
+            <!-- Search Start-->
+            <!-- Search End-->
+            <!-- Quick View START -->
+            <div class="modal modal-right fade quick-view" id="quick-view">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-between align-items-center">
+                            <h5 class="modal-title">Theme Config</h5>
+                        </div>
+                        <div class="modal-body scrollable">
+                            <div class="m-b-30">
+                                <h5 class="m-b-0">Header Color</h5>
+                                <p>Config header background color</p>
+                                <div class="theme-configurator d-flex m-t-10">
+                                    <div class="radio">
+                                        <input id="header-default" name="header-theme" type="radio" checked value="default">
+                                        <label for="header-default"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-primary" name="header-theme" type="radio" value="primary">
+                                        <label for="header-primary"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-success" name="header-theme" type="radio" value="success">
+                                        <label for="header-success"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-secondary" name="header-theme" type="radio" value="secondary">
+                                        <label for="header-secondary"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-danger" name="header-theme" type="radio" value="danger">
+                                        <label for="header-danger"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <h5 class="m-b-0">Side Nav Dark</h5>
+                                <p>Change Side Nav to dark</p>
+                                <div class="switch d-inline">
+                                    <input type="checkbox" name="side-nav-theme-toogle" id="side-nav-theme-toogle">
+                                    <label for="side-nav-theme-toogle"></label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <h5 class="m-b-0">Folded Menu</h5>
+                                <p>Toggle Folded Menu</p>
+                                <div class="switch d-inline">
+                                    <input type="checkbox" name="side-nav-fold-toogle" id="side-nav-fold-toogle">
+                                    <label for="side-nav-fold-toogle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Quick View END -->
+        </div>
+    </div>
 
-    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Header_Navbar/_Navbar.cshtml") <!-- slim-navbar -->
 
-    <div class="slim-mainpanel">
-        <div class="container">
-            @RenderBody()
-        </div><!-- container -->
-    </div><!-- slim-mainpanel -->
+    <!-- Core Vendors JS -->
+    <script src="~/Enlink/assets/js/vendors.min.js"></script>
 
-    <script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>
-    <script src="~/AdminAssets/lib/popper.js/js/popper.js"></script>
-    <script src="~/AdminAssets/lib/bootstrap/js/bootstrap.js"></script>
-    <script src="~/AdminAssets/lib/jquery.cookie/js/jquery.cookie.js"></script>
-    <script src="~/AdminAssets/lib/chartist/js/chartist.js"></script>
-    <script src="~/AdminAssets/lib/d3/js/d3.js"></script>
-    <script src="~/AdminAssets/lib/rickshaw/js/rickshaw.min.js"></script>
-    <script src="~/AdminAssets/lib/jquery.sparkline.bower/js/jquery.sparkline.min.js"></script>
+    <!-- page js -->
+    <script src="~/Enlink/assets/vendors/chartjs/Chart.min.js"></script>
+    <script src="~/Enlink/assets/js/pages/dashboard-default.js"></script>
 
-    <script src="~/AdminAssets/js/ResizeSensor.js"></script>
-    <script src="~/AdminAssets/js/dashboard.js"></script>
-    <script src="~/AdminAssets/js/slim.js"></script>
+    <!-- Core JS -->
+    <script src="~/Enlink/assets/js/app.min.js"></script>
 
     @await RenderSectionAsync("Scripts_Admin", required: false)
 </body>
 </html>
+
+
+
+
+

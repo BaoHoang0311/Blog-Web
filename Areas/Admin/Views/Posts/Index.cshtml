@@ -5,87 +5,86 @@
     ViewData["Title"] = "Quản lý Bài Viết";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-
-
-<div class="row">
-    <div class="col-lg-6">
-        <div class="form-group mg-b-10-force">
-            <select class="form-control select2" id="catID" name="catID" asp-items="@ViewBag.DanhMuc">
-                <option label="LỌC THEO DANH MỤC"></option>
-            </select>
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Trang Bài Viết</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a class="breadcrumb-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
+                <a class="breadcrumb-item" asp-action="Create">Create</a>
+            </nav>
         </div>
     </div>
 
-    <div class="col-lg-6">
-        <input class="form-control" placeholder="Tìm kiếm bài viết" type="text" id="keyword" name="keyword">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group mg-b-10-force">
+                <select class="form-control select2" id="catID" name="catID" asp-items="@ViewBag.DanhMuc">
+                    <option label="LỌC THEO DANH MỤC"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <input class="form-control" placeholder="Tìm kiếm bài viết" type="text" id="keyword" name="keyword">
+        </div>
+
     </div>
 
-</div>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="slim-pageheader">
-    <ol class="breadcrumb slim-breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Post</li>
-    </ol>
-    <h6 class="slim-pagetitle">Post</h6>
-</div><!-- slim-pageheader -->
-
-<div class="table-responsive">
-    <table class="table table-bordered table-colored table-primary">
-        <thead>
-            <tr>
-                <th class="wd-5p">ID</th>
-                <th class="wd-20p">Title</th>
-                <th class="wd-10p">Danh mục</th>
-                <th class="wd-10p">Public</th>
-                <th class="wd-40p">#</th>
-
-            </tr>
-        </thead>
-        <tbody id="records_table">
-            @foreach (var item in Model)
-            {
-                string url = $"{item.Alias}.html";
-                string url1 = $"{item.Cat.Alias}";
+    <div class="table-responsive">
+        <table class="table table-bordered table-colored ">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.PostId)</td>
+                    <th class="wd-5p">ID</th>
+                    <th class="wd-20p">Title</th>
+                    <th class="wd-10p">Danh mục</th>
+                    <th class="wd-10p">Public</th>
+                    <th class="wd-40p">#</th>
 
-                    <td><a href="/@url">@item.Title</a></td>
-
-                    <td><a href="/@url1"> @item.Cat.CatName</a></td>
-
-                    <td>
-                        @if (item.Published == true)
-                        {
-                            <span class="badge  badge-primary">Public</span>
-
-                        }
-                        else
-                        {
-                            <span class="badge badge-warning">NON-Public</span>
-                        }
-                    </td>
-                    <td>
-                        <a href="/@url" target="_blank" class="btn btn-warning">View</a> |
-                        <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-secondary">Edit</a>|
-                        <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-success">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.PostId" class="btn btn-danger">Delete</a>
-
-                    </td>
                 </tr>
-            }
-        </tbody>
+            </thead>
+            <tbody id="records_table">
+                @foreach (var item in Model)
+                {
+                    string url = $"{item.Alias}.html";
+                    string url1 = $"{item.Cat.Alias}";
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.PostId)</td>
 
-    </table>
-    <div aria-label="Page navigation example">
-        <ul class="pagination">
-            <pager class="pager-container" list="@Model"
-                   options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
-                   asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" />
-        </ul>
+                        <td><a href="/@url">@item.Title</a></td>
+
+                        <td><a href="/@url1"> @item.Cat.CatName</a></td>
+
+                        <td>
+                            @if (item.Published == true)
+                            {
+                                <span class="badge  badge-primary">Public</span>
+
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">NON-Public</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="/@url" target="_blank" class="btn btn-warning">View</a> |
+                            <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-secondary">Edit</a>|
+                            <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-success">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.PostId" class="btn btn-danger">Delete</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+        <div aria-label="Page navigation example">
+            <ul class="pagination">
+                <pager class="pager-container" list="@Model"
+                       options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
+                       asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" />
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -96,7 +95,7 @@
         $(document).ready(function () {
 
             document.getElementById('keyword').addEventListener('keyup', function (e) {
-                //Run LiveSearch on ever key up 
+                //Run LiveSearch on ever key up
                 LiveSearch()
             });
 

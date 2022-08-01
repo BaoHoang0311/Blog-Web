@@ -6,69 +6,68 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Danh Mục</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a class="breadcrumb-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
+                <a class="breadcrumb-item" asp-action="Create">Create</a>
+            </nav>
+        </div>
+    </div>
 
-<h1>Categories</h1>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="slim-pageheader">
-    <ol class="breadcrumb slim-breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Categories</li>
-    </ol>
-    <h6 class="slim-pagetitle">Categories</h6>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-bordered table-colored table-primary">
-        <thead>
-            <tr>
-                <th class="wd-10p">ID</th>
-                <th class="wd-20p">Tên Danh Mục</th>
-                <th class="wd-20p">Trạng Thái</th>
-                <th class="wd-10p">Sắp Xếp</th>
-                <th class="wd-40p">#</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-colored ">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CatId)
-                    </td>
-                    <td>
-                        <a href="/@item.Alias">@item.CatName</a>
-                    </td>
-                    <td>
-                        @if (item.Published == true)
-                        {
-                            <span class="badge  badge-primary">Public</span>
-
-                        }
-                        else
-                        {
-                            <span class="badge badge-warning">NON-Public</span>
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Ordering)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.CatId" class="btn btn-warning">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.CatId" class="btn btn-success">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.CatId" class="btn btn-danger">Delete</a>
-                    </td>
+                    <th class="wd-10p">ID</th>
+                    <th class="wd-20p">Tên Danh Mục</th>
+                    <th class="wd-20p">Trạng Thái</th>
+                    <th class="wd-10p">Sắp Xếp</th>
+                    <th class="wd-40p">#</th>
                 </tr>
-            }
-        </tbody>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CatId)
+                        </td>
+                        <td>
+                            <a href="/@item.Alias">@item.CatName</a>
+                        </td>
+                        <td>
+                            @if (item.Published == true)
+                            {
+                                <span class="badge  badge-primary">Public</span>
 
-    </table>
-    <div aria-label="Page navigation example">
-        <ul class="pagination">
-            <pager class="pager-container" list="@Model"
-                   options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
-                   asp-controller="Categories" asp-route-page="@ViewBag.CurrentPage" />
-        </ul>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">NON-Public</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ordering)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.CatId" class="btn btn-warning">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.CatId" class="btn btn-success">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.CatId" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+        <div aria-label="Page navigation example">
+            <ul class="pagination">
+                <pager class="pager-container" list="@Model"
+                       options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
+                       asp-controller="Categories" asp-route-page="@ViewBag.CurrentPage" />
+            </ul>
+        </div>
     </div>
 </div>

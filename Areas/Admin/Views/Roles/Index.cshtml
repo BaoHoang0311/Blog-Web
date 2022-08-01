@@ -5,46 +5,43 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="slim-pageheader">
-    <ol class="breadcrumb slim-breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Roles Tables</li>
-    </ol>
-    <h6 class="slim-pagetitle">Roles</h6>
-</div>
-<div class="table-responsive">
-    <table class="table table-bordered table-colored table-primary">
-        <thead>
-            <tr>
-                <th class="wd-10p">ID</th>
-                <th class="wd-20p">RoleName</th>
-                <th class="wd-30p">Description</th>
-                <th class="wd-40p"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+<div class="main-content">
+    <div class="slim-pageheader">
+        <ol class="breadcrumb slim-breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"> <a asp-action="Create">Create New</a></li>
+        </ol>
+        <h6 class="slim-pagetitle">Roles</h6>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.RoleId)</td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RoleName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.RoleId" class="btn btn-warning">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.RoleId" class="btn btn-success">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.RoleId"class="btn btn-danger">Delete</a>
-                    </td>
+                    <th class="wd-10p">ID</th>
+                    <th class="wd-20p">RoleName</th>
+                    <th class="wd-30p">Description</th>
+                    <th class="wd-40p"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.RoleId)</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RoleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.RoleId" class="btn btn-warning">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.RoleId" class="btn btn-success">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.RoleId" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -50,7 +50,7 @@ namespace blog_web.Areas.Admin.Controllers
 
 
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 20;
+            var pageSize = 3;
 
             List<Post> lsPost = new List<Post>();
 

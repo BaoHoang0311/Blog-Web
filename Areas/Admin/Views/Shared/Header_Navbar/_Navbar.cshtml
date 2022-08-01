@@ -1,44 +1,56 @@
-﻿<div class="slim-navbar">
-    <div class="container">
-        <ul class="nav">
-            <li class="nav-item active">
-                <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
-                    <i class="icon ion-ios-home-outline"></i>
-                    <span>Dashboard</span>
+﻿
+<div class="side-nav m-t-2">
+    <div class="side-nav-inner">
+        <ul class="side-nav-menu scrollable ps-container ps-theme-default ps-active-y" data-ps-id="e774fd08-f2f6-190f-0e5e-553146ea080d">
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="/Admin/">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-dashboard"></i>
+                    </span>
+                    <span class="title">Dashboard</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
                 </a>
-            </li>  <!--Dashboard-->
-
-            <li class="nav-item with-sub">
-                <a class="nav-link" href="#">
-                    <i class="icon ion-android-document"></i>
-                    <span>Bài Viết</span>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="#">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-file"></i>
+                    </span>
+                    <span class="title">Bài Viết</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
                 </a>
-                <div class="sub-item">
-                    <ul>
-                        <li><a asp-area="Admin" asp-controller="Posts" asp-action="Index">QUẢN LÝ BÀI VIẾT </a></li>
-                        <li><a asp-area="Admin" asp-controller="Posts" asp-action="Create"> THÊM MỚI </a></li>
-                    </ul>
-                </div> <!-- dropdown-menu -->
-            </li><!--Bài viết-->
-            <li class="nav-item with-sub">
-                <a class="nav-link" href="#">
-                    <i class="icon ion-information-circled"></i>
-                    <span>Hệ Thống</span>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a asp-area="Admin" asp-controller="Posts" asp-action="Index">QUẢN LÝ BÀI VIẾT</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Posts" asp-action="Create"> THÊM MỚI </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="#">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-setting"></i>
+                    </span>
+                    <span class="title">HỆ THỐNG</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
                 </a>
-                <div class="sub-item">
-                    <ul>
-                        <li><a asp-area="Admin" asp-controller="Categories" asp-action="Index">QUẢN LÝ DANH MỤC</a></li>
-                        <li><a asp-area="Admin" asp-controller="Accounts" asp-action="Index"> QUẢN LÝ TÀI KHOẢN</a></li>
-                        <li><a asp-area="Admin" asp-controller="Roles" asp-action="Index"> QUYỀN TRUY CẬP</a></li>
-                    </ul>
-                </div> <!-- dropdown-menu -->
-            </li><!--Hệ thống-->
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Admin" asp-controller="Advertisements" asp-action="Index">
-                    <i class="icon ion-android-favorite"></i>
-                    <span>QUẢNG CÁO</span>
-                </a>
-            </li> <!--Quảng cáo-->
+                <ul class="dropdown-menu">
+                    <li><a asp-area="Admin" asp-controller="Categories" asp-action="Index">QUẢN LÝ DANH MỤC</a></li>
+                    <li><a asp-area="Admin" asp-controller="Accounts" asp-action="Index"> QUẢN LÝ TÀI KHOẢN</a></li>
+                    <li><a asp-area="Admin" asp-controller="Roles" asp-action="Index"> QUYỀN TRUY CẬP</a></li>
+                </ul>
+            </li>
+            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+            </div>
+            <div class="ps-scrollbar-y-rail" style="top: 0px; right: 0px; height: 252px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 96px;"></div></div>
         </ul>
-    </div><!-- container -->
+    </div>
 </div>
