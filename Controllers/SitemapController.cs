@@ -16,11 +16,11 @@ namespace blog_web.Controllers
         {
             _context = context;
         }
-
+        public static string baseUrl = "https://localhost:44359/";
         [Route("sitemap")]
         public async Task<ActionResult> SitemapAsync()
         {
-            string baseUrl = "https://localhost:44359/";
+           
 
             // get a list of published articles
             var posts = await _context.Posts.ToListAsync();
@@ -40,6 +40,21 @@ namespace blog_web.Controllers
             // generate the sitemap xml
             string xml = siteMapBuilder.ToString();
             return Content(xml, "text/xml");
+        }
+        [Route("Sitemap-categories.xml")]
+        public async  Task<IActionResult> SiteDanhMuc()
+        {
+            var lsdanhmuc = await _context.Categories.Where(x => x.Published == true).ToListAsync();
+            // get last modified date of the home page
+            var siteMapBuilder = new Sitemapbuilder();
+            siteMapBuilder.AddUrl(baseUrl, modified: DateTime.UtcNow, changeFrequency: ChangeFrequency.Weekly, priority: 1.0);
+            foreach (var cat in lsdanhmuc)
+            {
+                siteMapBuilder.AddUrl(baseUrl + cat.Alias, modified: DateTime.UtcNow, changeFrequency: null, priority: 0.9);
+            }
+            // generate the sitemap xml
+            string xml = siteMapBuilder.ToString();
+            return Content(xml, "text/xml",System.Text.Encoding.UTF8);
         }
     }
 }
