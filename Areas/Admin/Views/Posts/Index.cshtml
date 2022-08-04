@@ -46,14 +46,14 @@
             <tbody id="records_table">
                 @foreach (var item in Model)
                 {
-                    string url = $"{item.Alias}.html";
-                    string url1 = $"{item.Cat.Alias}";
+                    string url = $"/{item.Alias}.html";
+                    string url1 = $"/{item.Cat.Alias}";
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.PostId)</td>
 
-                        <td><a href="/@url">@item.Title</a></td>
+                        <td><a href="@url">@item.Title</a></td>
 
-                        <td><a href="/@url1"> @item.Cat.CatName</a></td>
+                        <td><a href="@url1"> @item.Cat.CatName</a></td>
 
                         <td>
                             @if (item.Published == true)
@@ -90,34 +90,42 @@
 
 
 @section Scripts_Admin {
-    <script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>
+    @*<script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>*@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-
-            document.getElementById('keyword').addEventListener('keyup', function (e) {
-                //Run LiveSearch on ever key up
-                LiveSearch()
+            $("#keyword").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#records_table tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
             });
 
-            function LiveSearch() {
-                var strkeyword = $('#keyword').val();
-                $.ajax({
-                    type: "POST",
-                    url: '/Admin/Search/FindBaiViet',
-                    datatype: "json",
-                    data: {
-                        keyword: strkeyword
-                    },
-                    async: true,
-                    success: function (results) {
-                        $("#records_table").html("");
-                        $("#records_table").html(results);
-                    },
-                    error: function (xhr) {
-                        alert('error');
-                    }
-                });
-            };
+
+            //document.getElementById('keyword').addEventListener('keyup', function (e) {
+            //    //Run LiveSearch on ever key up
+            //    LiveSearch()
+            //});
+
+            //function LiveSearch() {
+            //    var strkeyword = $('#keyword').val();
+            //    $.ajax({
+            //        type: "POST",
+            //        url: '/Admin/Search/FindBaiViet',
+            //        datatype: "json",
+            //        data: {
+            //            keyword: strkeyword
+            //        },
+            //        async: true,
+            //        success: function (results) {
+            //            $("#records_table").html("");
+            //            $("#records_table").html(results);
+            //        },
+            //        error: function (xhr) {
+            //            alert('error');
+            //        }
+            //    });
+            //};
 
             jQuery("#catID").change(function () {
                 var _catID = $('#catID').val();
@@ -142,6 +150,5 @@
                 });
             });
         });
-
     </script>
 }
