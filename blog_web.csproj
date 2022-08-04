@@ -38,8 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\AdminAssets\img\icon1.svg" />
-    <None Include="wwwroot\AdminAssets\img\icon2.svg" />
     <None Include="wwwroot\AdminAssets\js\chart.chartist.js" />
     <None Include="wwwroot\AdminAssets\js\chart.chartjs.dark.js" />
     <None Include="wwwroot\AdminAssets\js\chart.chartjs.js" />

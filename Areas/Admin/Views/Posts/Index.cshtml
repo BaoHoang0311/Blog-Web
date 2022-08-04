@@ -43,17 +43,18 @@
 
                 </tr>
             </thead>
+
             <tbody id="records_table">
                 @foreach (var item in Model)
                 {
-                    string url = $"{item.Alias}.html";
-                    string url1 = $"{item.Cat.Alias}";
+                    string url = $"/{item.Alias}.html";
+                    string url1 = $"/{item.Cat.Alias}";
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.PostId)</td>
 
-                        <td><a href="/@url">@item.Title</a></td>
+                        <td><a href="@url">@item.Title</a></td>
 
-                        <td><a href="/@url1"> @item.Cat.CatName</a></td>
+                        <td><a href="@url1"> @item.Cat.CatName</a></td>
 
                         <td>
                             @if (item.Published == true)
@@ -67,7 +68,7 @@
                             }
                         </td>
                         <td>
-                            <a href="/@url" target="_blank" class="btn btn-warning">View</a> |
+                            <a href="@url" target="_blank" class="btn btn-warning">View</a> |
                             <a asp-action="Edit" asp-route-id="@item.PostId" class="btn btn-secondary">Edit</a>|
                             <a asp-action="Details" asp-route-id="@item.PostId" class="btn btn-success">Details</a> |
                             <a asp-action="Delete" asp-route-id="@item.PostId" class="btn btn-danger">Delete</a>
@@ -76,13 +77,13 @@
                     </tr>
                 }
             </tbody>
-
         </table>
         <div aria-label="Page navigation example">
             <ul class="pagination">
                 <pager class="pager-container" list="@Model"
                        options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
-                       asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" />
+                       asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" asp-route-catid="@ViewBag.DanhMuc_ID"
+                       asp-route-keyword="@ViewBag.keyword"/>
             </ul>
         </div>
     </div>
@@ -90,44 +91,31 @@
 
 
 @section Scripts_Admin {
-    <script src="~/AdminAssets/lib/jquery/js/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
+            var timer;
+            $('#keyword').on('keyup', function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    LiveSearch();
+                }, 2000);
+            })
 
-            document.getElementById('keyword').addEventListener('keyup', function (e) {
-                //Run LiveSearch on ever key up
+            jQuery("#catID").change(function () {
                 LiveSearch()
             });
 
             function LiveSearch() {
                 var strkeyword = $('#keyword').val();
-                $.ajax({
-                    type: "POST",
-                    url: '/Admin/Search/FindBaiViet',
-                    datatype: "json",
-                    data: {
-                        keyword: strkeyword
-                    },
-                    async: true,
-                    success: function (results) {
-                        $("#records_table").html("");
-                        $("#records_table").html(results);
-                    },
-                    error: function (xhr) {
-                        alert('error');
-                    }
-                });
-            };
-
-            jQuery("#catID").change(function () {
                 var _catID = $('#catID').val();
                 catid = parseFloat(_catID);
-
                 $.ajax({
                     type: "GET",
                     url: '/Admin/Posts/Filter',
                     datatype: "json",
                     data: {
+                        keyword: strkeyword,
                         catID: catid
                     },
                     async: true,
@@ -140,8 +128,7 @@
                         alert('error');
                     }
                 });
-            });
+            };
         });
-
     </script>
 }

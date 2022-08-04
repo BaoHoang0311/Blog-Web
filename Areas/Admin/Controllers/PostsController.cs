@@ -27,22 +27,23 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
             save = _save;
         }
-        public IActionResult Filter(int catID = 0)
+        public IActionResult Filter(int? catID, string keyword)
         {
-            var url = $"/Admin/Posts/Index?catID={catID}";
-            if (catID == 0)
+            var url = $"/Admin/Posts/Index?catID={catID}&keyword={keyword}";
+            if (catID == null && keyword == null  )
             {
                 url = $"/Admin/Posts/Index";
             }
-            else
+            else // catID == null || keyword == null
             {
-                url = $"/Admin/Posts/Index?catID={catID}";
+                if(catID != null)url = $"/Admin/Posts/Index?catID={catID}";
+                if(keyword != null)url = $"/Admin/Posts/Index?keyword={keyword}";
             }
             var zzz = Json(new { status = "success", redirectUrl = url });
             return zzz;
         }
         // GET: Admin/Posts
-        public async Task<IActionResult> Index(int? page, int catID = 0)
+        public async Task<IActionResult> Index(int? page, int? catID,string keyword)
         {
             var ID_user = User.GetSpecificClaim("Account_Id");
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(ID_user));
@@ -50,51 +51,49 @@ namespace blog_web.Areas.Admin.Controllers
 
 
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 3;
+            var pageSize = 1;
+
+           
+            IQueryable<Post> qr_post = _context.Posts
+                                            .Include(p => p.Account)
+                                            .Include(p => p.Cat)
+                                            .OrderByDescending(x => x.PostId)
+                                            .AsNoTracking();
+
+            if (!User.IsInRole("Admin"))
+            {
+                qr_post = qr_post.Where(p => p.AccountId == taikhoan.AccountId);
+            }
+
+            if (catID != null && catID != 0  )
+            {
+                qr_post = qr_post.Where(x => x.CatId == catID);
+            }
+
+            if (keyword != null)
+            {
+                qr_post = qr_post.Where(x => x.Title.Contains(keyword) || x.Contents.Contains(keyword))
+                           .OrderByDescending(x => x.CreatedAt);
+            }
 
             List<Post> lsPost = new List<Post>();
-
-            if (User.IsInRole("Admin"))
-            {
-                lsPost = _context.Posts.Include(p => p.Account)
-                    .Include(p => p.Cat)
-                    .OrderByDescending(x => x.PostId).ToList();
-            }
-            else
-            {
-                lsPost = _context.Posts.Include(p => p.Account)
-                           .Include(p => p.Cat)
-                           .Where(p => p.AccountId == taikhoan.AccountId)
-                           .OrderByDescending(x => x.PostId).ToList();
-            }
-
-            if (catID != 0)
-            {
-                lsPost = _context.Posts
-                            .AsNoTracking().Where(x => x.CatId == catID)
-                            .Include(x => x.Cat)
-                            .OrderByDescending(x => x.PostId).ToList();
-            }
-            else
-            {
-                lsPost = _context.Posts
-                            .AsNoTracking()
-                            .Include(x => x.Cat)
-                            .OrderByDescending(x => x.PostId).ToList();
-            }
+            lsPost = qr_post.ToList();
 
             PagedList<Post> models = new PagedList<Post>(lsPost.AsQueryable(), pageNumber, pageSize);
 
             var cate = _context.Categories.ToList();
             List<Category> cate1 = new();
+
             cate1.Add(new Category()
             {
                 CatId = 0,
                 CatName = "ALL"
-            }); ;
+            });
+
             cate1.AddRange(_context.Categories);
             ViewBag.DanhMuc = new SelectList(cate1, "CatId", "CatName");
-
+            ViewBag.DanhMuc_ID = catID;
+            ViewBag.keyword = keyword;
             return View(models);
         }
 
