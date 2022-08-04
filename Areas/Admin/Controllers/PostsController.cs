@@ -27,10 +27,10 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
             save = _save;
         }
-        public IActionResult Filter(int catID = 0)
+        public IActionResult Filter(int? catID)
         {
             var url = $"/Admin/Posts/Index?catID={catID}";
-            if (catID == 0)
+            if (catID == null)
             {
                 url = $"/Admin/Posts/Index";
             }
@@ -42,7 +42,7 @@ namespace blog_web.Areas.Admin.Controllers
             return zzz;
         }
         // GET: Admin/Posts
-        public async Task<IActionResult> Index(int? page, int catID = 0)
+        public async Task<IActionResult> Index(int? page, int? catID)
         {
             var ID_user = User.GetSpecificClaim("Account_Id");
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(ID_user));
@@ -50,7 +50,7 @@ namespace blog_web.Areas.Admin.Controllers
 
 
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 3;
+            var pageSize = 2;
 
             List<Post> lsPost = new List<Post>();
 
@@ -68,7 +68,7 @@ namespace blog_web.Areas.Admin.Controllers
                            .OrderByDescending(x => x.PostId).ToList();
             }
 
-            if (catID != 0)
+            if (catID != null && catID != 0  )
             {
                 lsPost = _context.Posts
                             .AsNoTracking().Where(x => x.CatId == catID)
@@ -96,7 +96,7 @@ namespace blog_web.Areas.Admin.Controllers
 
             cate1.AddRange(_context.Categories);
             ViewBag.DanhMuc = new SelectList(cate1, "CatId", "CatName");
-
+            ViewBag.DanhMuc_ID = catID;
             return View(models);
         }
 

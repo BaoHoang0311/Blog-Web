@@ -82,7 +82,7 @@
             <ul class="pagination">
                 <pager class="pager-container" list="@Model"
                        options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
-                       asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" />
+                       asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" asp-route-catid="@ViewBag.DanhMuc_ID"/>
             </ul>
         </div>
     </div>
@@ -129,6 +129,7 @@
 
             jQuery("#catID").change(function () {
                 var _catID = $('#catID').val();
+
                 catid = parseFloat(_catID);
 
                 $.ajax({
