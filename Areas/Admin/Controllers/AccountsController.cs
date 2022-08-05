@@ -99,7 +99,7 @@ namespace blog_web.Areas.Admin.Controllers
         }
 
         #endregion
-
+        [AllowAnonymous]
         [Route("/dang-xuat.html")]
         public async Task<IActionResult> Logout()
         {
@@ -107,13 +107,11 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 await HttpContext.SignOutAsync("CookieAuthentication_zz");
                 HttpContext.Session.Remove("id_tai_khoan");
-                //return RedirectToAction("Index", "Home", new { Area = "" }) ;
-                return RedirectToAction("Index", "Home", new { Area = "Admin" }) ;
+                return RedirectToAction("Index", "Home", new { Area = "" });
             }
             catch
             {
-                //return RedirectToAction("Index", "Home", new { Area = "" });
-                return RedirectToAction("Index", "Home", new { Area = "Admin" });
+                return RedirectToAction("Index", "Home", new { Area = "" });
             }
         }
         // GET: Admin/Accounts
