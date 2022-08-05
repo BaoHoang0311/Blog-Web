@@ -49,7 +49,7 @@ namespace blog_web
                     .AddCookie("CookieAuthentication_zz", config =>
                     {
                         config.Cookie.Name = "UserLoginCookie";
-                        config.ExpireTimeSpan = TimeSpan.FromDays(30);
+                        config.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                         config.LoginPath = "/dang-nhap.html";
                         config.LogoutPath = "/dang-xuat.html";
                         config.AccessDeniedPath = "/not-found.html";
