@@ -181,7 +181,6 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             var account = await _context.Accounts.FindAsync(id);
             if (account == null)
             {

@@ -27,30 +27,32 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
             save = _save;
         }
-        public IActionResult Filter(int? catID, string keyword)
+        public IActionResult Filter(int? catID, string keyword, string CurrentCat_ID)
         {
             var url = $"/Admin/Posts/Index?catID={catID}&keyword={keyword}";
             if (catID == null && keyword == null  )
             {
                 url = $"/Admin/Posts/Index";
             }
-            else // catID == null || keyword == null
-            {
-                if(catID != null)url = $"/Admin/Posts/Index?catID={catID}";
-                if(keyword != null)url = $"/Admin/Posts/Index?keyword={keyword}";
-            }
+
+            //else // catID == null || keyword == null
+            //{
+            //    if(catID != null)url = $"/Admin/Posts/Index?catID={catID}";
+            //    if(keyword != null)url = $"/Admin/Posts/Index?keyword={keyword}";
+            //}
             var zzz = Json(new { status = "success", redirectUrl = url });
             return zzz;
         }
         // GET: Admin/Posts
-        public async Task<IActionResult> Index(int? page, int? catID,string keyword)
+        public async Task<IActionResult> Index(int? page, int? catID , string keyword)
         {
             var ID_user = User.GetSpecificClaim("Account_Id");
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(ID_user));
+
             if (taikhoan == null) return NotFound();
 
 
-            var pageNumber = page == null || page <= 0 ? 1 : page.Value;
+             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 1;
 
            
@@ -91,9 +93,13 @@ namespace blog_web.Areas.Admin.Controllers
             });
 
             cate1.AddRange(_context.Categories);
+
             ViewBag.DanhMuc = new SelectList(cate1, "CatId", "CatName");
+            
             ViewBag.DanhMuc_ID = catID;
+            
             ViewBag.keyword = keyword;
+
             return View(models);
         }
 
@@ -195,10 +201,10 @@ namespace blog_web.Areas.Admin.Controllers
             "Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
         Post post, IFormFile fThumb)
         {
-            if (id != post.PostId)
-            {
-                return NotFound();
-            }
+            //if (id != post.PostId)
+            //{
+            //    return NotFound();
+            //}
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
             if (taikhoan == null) return NotFound();
             
