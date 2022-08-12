@@ -106,6 +106,13 @@
                 LiveSearch()
             });
 
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+
             function LiveSearch() {
                 var strkeyword = $('#keyword').val();
 
@@ -114,8 +121,11 @@
 
                 if (_catID == 0)
                 {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    catid = urlParams.get('catid');
+                    //const urlParams = new URLSearchParams(window.location.search);
+                    //catid = urlParams.get('catid');
+
+                    var qsp = 'catid';
+                    para = getUrlParameter(qsp);
                 }
 
                 $.ajax({
