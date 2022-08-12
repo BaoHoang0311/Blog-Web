@@ -26,11 +26,11 @@
         </div>
 
         <div class="col-lg-6">
-            <input class="form-control" placeholder="Tìm kiếm bài viết" type="text" id="keyword" name="keyword">
+            <input class="form-control" placeholder="Tìm kiếm bài viết" type="text" id="keyword" name="keyword" 
+                   value="@ViewBag.keyword">
         </div>
 
     </div>
-
     <div class="table-responsive">
         <table class="table table-bordered table-colored ">
             <thead>
@@ -83,7 +83,7 @@
                 <pager class="pager-container" list="@Model"
                        options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
                        asp-controller="Posts" asp-route-page="@ViewBag.CurrentPage" asp-route-catid="@ViewBag.DanhMuc_ID"
-                       asp-route-keyword="@ViewBag.keyword"/>
+                       asp-route-keyword="@ViewBag.keyword" />
             </ul>
         </div>
     </div>
@@ -108,15 +108,23 @@
 
             function LiveSearch() {
                 var strkeyword = $('#keyword').val();
+
                 var _catID = $('#catID').val();
                 catid = parseFloat(_catID);
+
+                if (_catID == 0)
+                {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    catid = urlParams.get('catid');
+                }
+
                 $.ajax({
                     type: "GET",
                     url: '/Admin/Posts/Filter',
                     datatype: "json",
                     data: {
                         keyword: strkeyword,
-                        catID: catid
+                        catID: catid,
                     },
                     async: true,
                     success: function (results) {

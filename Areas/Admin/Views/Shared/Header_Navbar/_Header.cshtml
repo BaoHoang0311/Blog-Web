@@ -1,5 +1,4 @@
-﻿@using blog_web.Extension
-
+﻿@using System.Security.Claims;
 <div class="header">
     <div class="logo logo-dark">
         <a href="/Admin/">
@@ -41,7 +40,7 @@
                             </div>
                             <div class="m-l-10">
                                 <p class="m-b-0 text-dark font-weight-semibold">@User.Identity.Name</p>
-                                <p class="m-b-0 opacity-07">@User.GetRoleName()</p>
+                                <p class="m-b-0 opacity-07">@User.FindFirstValue(ClaimTypes.Role)</p>
                             </div>
                         </div>
                     </div>
