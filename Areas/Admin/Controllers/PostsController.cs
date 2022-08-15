@@ -27,7 +27,7 @@ namespace blog_web.Areas.Admin.Controllers
             _context = context;
             save = _save;
         }
-        public IActionResult Filter(int? catID, string keyword, string CurrentCat_ID)
+        public IActionResult Filter(int? catID, string keyword)
         {
             var url = $"/Admin/Posts/Index?catID={catID}&keyword={keyword}";
             if (catID == null && keyword == null  )
@@ -77,9 +77,7 @@ namespace blog_web.Areas.Admin.Controllers
 
             PagedList<Post> models = new PagedList<Post>(lsPost.AsQueryable(), pageNumber, pageSize);
 
-            var cate = _context.Categories.ToList();
-            ViewBag.DanhMuc = new SelectList(cate, "CatId", "CatName");
-            
+            ViewBag.DanhMuc = new SelectList(_context.Categories, "CatId", "CatName");
             ViewBag.DanhMuc_ID = catID;
             
             ViewBag.keyword = keyword;
