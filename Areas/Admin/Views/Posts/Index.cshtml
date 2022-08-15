@@ -21,7 +21,7 @@
             <div class="form-group mg-b-10-force">
                 <select class="form-control select2" id="catID" name="catID" asp-items="@ViewBag.DanhMuc">
                     <option label="LỌC THEO DANH MỤC"></option>
-                    <option value="0" >All</option>
+                    <option value="0">All</option>
                 </select>
             </div>
         </div>
@@ -120,13 +120,13 @@
                 var _catID = $('#catID').val();
                 catid = parseFloat(_catID);
 
-                if (_catID == 0)
+                if (_catID == "")
                 {
                     //const urlParams = new URLSearchParams(window.location.search);
-                    //catid = urlParams.get('catid');
+                    //catid = urlParams.get('catID');
 
-                    var qsp = 'catid';
-                    para = getUrlParameter(qsp);
+                    var qsp = 'catID';
+                    catid = getUrlParameter(qsp);
                 }
 
                 $.ajax({
