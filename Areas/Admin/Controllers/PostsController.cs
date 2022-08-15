@@ -34,12 +34,6 @@ namespace blog_web.Areas.Admin.Controllers
             {
                 url = $"/Admin/Posts/Index";
             }
-
-            //else // catID == null || keyword == null
-            //{
-            //    if(catID != null)url = $"/Admin/Posts/Index?catID={catID}";
-            //    if(keyword != null)url = $"/Admin/Posts/Index?keyword={keyword}";
-            //}
             var zzz = Json(new { status = "success", redirectUrl = url });
             return zzz;
         }
@@ -84,17 +78,7 @@ namespace blog_web.Areas.Admin.Controllers
             PagedList<Post> models = new PagedList<Post>(lsPost.AsQueryable(), pageNumber, pageSize);
 
             var cate = _context.Categories.ToList();
-            List<Category> cate1 = new();
-
-            cate1.Add(new Category()
-            {
-                CatId = 0,
-                CatName = "ALL"
-            });
-
-            cate1.AddRange(_context.Categories);
-
-            ViewBag.DanhMuc = new SelectList(cate1, "CatId", "CatName");
+            ViewBag.DanhMuc = new SelectList(cate, "CatId", "CatName");
             
             ViewBag.DanhMuc_ID = catID;
             
