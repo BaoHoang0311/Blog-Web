@@ -30,7 +30,7 @@ namespace blog_web.Areas.Admin.Controllers
         public IActionResult Filter(int? catID, string keyword)
         {
             var url = $"/Admin/Posts/Index?catID={catID}&keyword={keyword}";
-            if (catID == null && keyword == null  )
+            if (catID == null && keyword == null)
             {
                 url = $"/Admin/Posts/Index";
             }
@@ -38,7 +38,7 @@ namespace blog_web.Areas.Admin.Controllers
             return zzz;
         }
         // GET: Admin/Posts
-        public async Task<IActionResult> Index(int? page, int? catID , string keyword)
+        public async Task<IActionResult> Index(int? page, int? catID, string keyword)
         {
             var ID_user = User.GetSpecificClaim("Account_Id");
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(ID_user));
@@ -46,10 +46,10 @@ namespace blog_web.Areas.Admin.Controllers
             if (taikhoan == null) return NotFound();
 
 
-             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
+            var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 1;
 
-           
+
             IQueryable<Post> qr_post = _context.Posts
                                             .Include(p => p.Account)
                                             .Include(p => p.Cat)
@@ -61,7 +61,7 @@ namespace blog_web.Areas.Admin.Controllers
                 qr_post = qr_post.Where(p => p.AccountId == taikhoan.AccountId);
             }
 
-            if (catID != null && catID != 0  )
+            if (catID != null && catID != 0)
             {
                 qr_post = qr_post.Where(x => x.CatId == catID);
             }
@@ -79,7 +79,7 @@ namespace blog_web.Areas.Admin.Controllers
 
             ViewBag.DanhMuc = new SelectList(_context.Categories, "CatId", "CatName");
             ViewBag.DanhMuc_ID = catID;
-            
+
             ViewBag.keyword = keyword;
 
             return View(models);
@@ -183,13 +183,13 @@ namespace blog_web.Areas.Admin.Controllers
             "Thumb,Published,Alias,CreatedAt,Author,IsHot,IsNewFeed,AccountId,CatId")]
         Post post, IFormFile fThumb)
         {
-            //if (id != post.PostId)
-            //{
-            //    return NotFound();
-            //}
+            if (id != post.PostId)
+            {
+                return NotFound();
+            }
             var taikhoan = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == int.Parse(User.GetAccountID()));
             if (taikhoan == null) return NotFound();
-            
+
             post.AccountId = int.Parse(User.GetAccountID());
             // chỉ sửa bài của mình khác id ko cho sửa,admin sửa dc hết
             if (post.AccountId != taikhoan.AccountId && User.FindFirstValue(ClaimTypes.Role) != "Admin")
