@@ -106,15 +106,19 @@
     <script>
         jQuery(document).ready(function () {
             $('#Contents').summernote({
-                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
-                styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5'],
-                height: 200,// set editor height
-                minHeight: null,// set minimum height of editor
-                maxHeight: null,// set maximum height of editor
-                focus: true // set focus to editable area after initializing summernote
+                placeholder: 'write here...',
+                fontNames: ['Arial', 'Arial Black'],
+                styleTags: [
+                    'p',
+                    'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+                ],
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                ],
             });
         });
     </script>
 }
-
 
