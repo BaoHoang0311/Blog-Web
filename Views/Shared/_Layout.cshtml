@@ -107,14 +107,16 @@
                                 <a class="icon-button"
                                    asp-area="Admin"
                                    asp-controller="Home"
-                                   asp-action="Index">
+                                   asp-action="Index" >
                                     <span class="icon-settings"></span>
                                 </a>
                              }
                             else
                             {
                                 <a class="icon-button"
-                                   href="/dang-nhap.html">
+                                   asp-area="Admin"
+                                   asp-controller="Accounts"
+                                   asp-action="Login">
                                     <span class="icon-login"></span>
                                 </a>
                             }

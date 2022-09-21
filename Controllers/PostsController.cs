@@ -45,7 +45,7 @@ namespace blog_web.Controllers
             ViewBag.Danhmuc = danhmuc.CatName;
             return View(posts);
         }
-        [Route("/{Alias}.html")]  // post
+        [Route("/{Alias}.html")]  // bài post
         public async Task<IActionResult> Details(string Alias)
         {
             if (Alias == "dang-nhap") return RedirectToAction("Login", "Accounts", new { Area = "Admin" });
