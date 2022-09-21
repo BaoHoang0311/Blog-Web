@@ -29,6 +29,7 @@ namespace blog_web.Areas.Admin.Controllers
         #region Login
         // GET: Admin/Login
         [AllowAnonymous]
+        [Route("/dang-nhap.html")]
         [HttpGet]
         public IActionResult Login()
         {
@@ -38,7 +39,7 @@ namespace blog_web.Areas.Admin.Controllers
             }
             return View("LogIn");
         }
-
+        [Route("/dang-nhap.html")]
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
