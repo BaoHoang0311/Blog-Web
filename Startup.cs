@@ -45,16 +45,6 @@ namespace blog_web
 
             services.AddMemoryCache();
 
-            //services.AddAuthentication("CookieAuthentication_zz")
-            //        .AddCookie("CookieAuthentication_zz", config =>
-            //        {
-            //            config.Cookie.Name = "UserLoginCookie";
-            //            config.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-            //            config.LoginPath = "/dang-nhap.html";
-            //            config.LogoutPath = "/dang-xuat.html";
-            //            config.AccessDeniedPath = "/not-found.html";
-            //        });
-
             services.AddAuthentication("CookieAuthentication_zz")
                     .AddCookie("CookieAuthentication_zz", config =>
                     {
