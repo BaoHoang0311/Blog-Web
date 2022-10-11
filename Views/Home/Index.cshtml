@@ -16,7 +16,8 @@
                     <div class="post featured-post-lg">
                         <div class="details clearfix">
                             <a href="/@Model.post.Cat.Alias" class="category-badge">@Model.post.Cat.CatName</a>
-                            <h2 class="post-title"><a href="/@Model.post.Cat.Alias">@Model.post.Title</a></h2>
+
+                            <h2 class="post-title"><a href="/@url">@Model.post.Title</a></h2>
                             <ul class="meta list-inline mb-0">
                                 <li class="list-inline-item"><a href="#">@Model.post.Author</a></li>
                                 <li class="list-inline-item">@Model.post.CreatedAt.Value.ToString("yyyy-MM-dd")</li>
@@ -60,7 +61,7 @@
                                             </a>
                                         </div>
                                         <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="/@Model.Populars[i].Alias">@Model.Populars[i].Title</a></h6>
+                                            <h6 class="post-title my-0"><a href="/@url">@Model.Populars[i].Title</a></h6>
                                             <ul class="meta list-inline mt-1 mb-0">
                                                 <li class="list-inline-item">@Model.Populars[i].CreatedAt.Value.ToString("yyyy-MM-dd")</li>
                                             </ul>
