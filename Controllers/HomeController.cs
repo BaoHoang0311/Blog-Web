@@ -26,7 +26,7 @@ namespace blog_web.Controllers
             _context = context;
             config = _config;
         }
-        [Route("/trang-chu.html")]
+        [Route("/")]
         public async Task<IActionResult> Index()
         {
             var list = await _context.Posts

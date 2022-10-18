@@ -4,20 +4,23 @@
 @for (int i = 0; i < 3; i++)
 {
     <!-- post -->
-    <div class="post post-list-sm circle">
-        <div class="thumb circle">
-            <span class="number">@Html.Raw(i+1)</span>
-            <a href="blog-single.html">
-                <div class="inner">
-                    <img src="@Model[i].Thumb" alt="post-title" />
-                </div>
-            </a>
-        </div>
-        <div class="details clearfix">
-            <h6 class="post-title my-0"><a href="blog-single.html">@Model[i].Title</a></h6>
-            <ul class="meta list-inline mt-1 mb-0">
-                <li class="list-inline-item">@Model[i].CreatedAt.Value.ToString("yyyy-MM-dd")</li>
-            </ul>
-        </div>
+<div class="post post-list-sm circle">
+    <div class="thumb circle">
+        <span class="number">@Html.Raw(i + 1)</span>
+        <a href="blog-single.html">
+            <div class="inner">
+                <img src="@Model[i].Thumb" alt="post-title" />
+            </div>
+        </a>
     </div>
+    @{
+        string url = Model[i].Alias + ".html";
+    }
+    <div class="details clearfix">
+        <h6 class="post-title my-0"><a href="/@url">@Model[i].Title</a></h6>
+        <ul class="meta list-inline mt-1 mb-0">
+            <li class="list-inline-item">@Model[i].CreatedAt.Value.ToString("yyyy-MM-dd")</li>
+        </ul>
+    </div>
+</div>
 }
