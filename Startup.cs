@@ -52,7 +52,7 @@ namespace blog_web
                         config.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                         config.LoginPath = "/dang-nhap.html";
                         config.LogoutPath = "/dang-xuat.html";
-                        config.AccessDeniedPath = "/not-found.html";
+                        config.AccessDeniedPath = "/NOTFOUND.html";
                     });
 
             services.ConfigureApplicationCookie(options =>
